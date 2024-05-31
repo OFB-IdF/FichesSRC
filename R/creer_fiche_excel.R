@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @examples
-creer_fiche <- function(nom_suivi, fichier_info, chemin_fiche, region = NULL) {
+creer_fiche_excel <- function(nom_suivi, fichier_info, chemin_fiche, region = NULL) {
   fiche <- openxlsx2::wb_load(
     file = system.file(
       "extdata", "fiche.xlsx",
