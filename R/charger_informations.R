@@ -7,6 +7,7 @@
 #'
 #' @importFrom dplyr filter
 #' @importFrom openxlsx2 read_xlsx
+#' @importFrom dplyr %>%
 charger_informations <- function(fichier_info, nom_suivi = NULL) {
   infos <- openxlsx2::read_xlsx(file = fichier_info, keep_attributes = TRUE)
 
