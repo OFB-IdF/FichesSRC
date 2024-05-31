@@ -10,10 +10,6 @@
 #' @importFrom dplyr filter select
 #' @importFrom openxlsx2 read_xlsx
 creer_fiches <- function(nom_suivi, fichier_info, dossier_fiches, region = NULL) {
-  cat("fiche excel modèle")
-  print(file.exists(system.file("extdata", "fiche.xlsx", package = "FichesSRC")))
-  cat("fiche web modèle")
-  print(file.exists(system.file("extdata", "page.qmd.brew", package = "FichesSRC")))
 
   infos <- openxlsx2::read_xlsx(fichier_info) %>%
     dplyr::filter(suivi == nom_suivi) %>%

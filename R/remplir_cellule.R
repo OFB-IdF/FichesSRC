@@ -11,14 +11,24 @@
 #' @importFrom magick image_read image_scale image_info
 #' @importFrom stringr str_detect
 #' @importFrom tools file_ext
+#' @importFrom ggplot2 ggsave
 remplir_cellule <- function(classeur, feuille = 1, cellule, valeur, largeur = NULL, hauteur = NULL, unite = "cm") {
   if (any(!is.na(valeur))) {
     if ("ggplot" %in% class(valeur)) {
-      print(valeur)
+      temp_gg <- tempfile(fileext = ".png")
 
-      classeur$add_plot(
+      ggplot2::ggsave(
+        plot = valeur,
+        filename = temp_gg,
+        width = largeur,
+        height = hauteur,
+        units = unite
+        )
+
+      classeur$add_image(
         sheet = feuille,
         dims = cellule,
+        file = temp_gg,
         width = largeur,
         height = hauteur,
         units = unite,
