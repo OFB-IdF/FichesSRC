@@ -10,23 +10,23 @@
 #' @importFrom dplyr filter select
 #' @importFrom openxlsx2 read_xlsx
 creer_fiches <- function(nom_suivi, fichier_info, dossier_fiches, region = NULL) {
+  cat("fiche excel modèle")
+  print(file.exists(system.file("extdata", "fiche.xlsx", package = "FichesSRC")))
+  cat("fiche web modèle")
+  print(file.exists(system.file("extdata", "page.qmd.brew", package = "FichesSRC")))
+
   infos <- openxlsx2::read_xlsx(fichier_info) %>%
     dplyr::filter(suivi == nom_suivi) %>%
     dplyr::select(-suivi) %>%
     dplyr::filter(rowSums(!is.na(.)) > 0)
 
   if (nrow(infos) > 0) {
-    cat(nom_suivi, "\n")
     chemin_fiche_excel <- file.path(dossier_fiches, paste0(nom_suivi, ".xlsx"))
     chemin_fiche_web   <- file.path(dossier_fiches, paste0(nom_suivi, ".qmd"))
 
-    cat("  Fiche Excel")
     creer_fiche_excel(nom_suivi, fichier_info, chemin_fiche_excel, region)
-    cat(" ok\n")
-    cat("  Fiche web")
     creer_fiche_web(nom_suivi, fichier_info, chemin_fiche_web, region)
-    cat("  ok\n")
-  }
+    }
 
 }
 
