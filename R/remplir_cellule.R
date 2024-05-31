@@ -38,7 +38,7 @@ remplir_cellule <- function(classeur, feuille = 1, cellule, valeur, largeur = NU
       if (stringr::str_detect(string = valeur, pattern = ".jpg$|.png$")) {
         if (stringr::str_detect(string = valeur, pattern = "^http")) {
           tmp <- tempfile(fileext = paste0(".", tools::file_ext(valeur)))
-          download.file(valeur, tmp, mode = "wb")
+          download.file(valeur, tmp, mode = "wb", quiet = TRUE)
 
           valeur <- tmp
         }

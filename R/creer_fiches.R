@@ -11,6 +11,7 @@
 #' @importFrom openxlsx2 read_xlsx
 creer_fiches <- function(nom_suivi, fichier_info, dossier_fiches, region = NULL) {
 
+  cat(nom_suivi)
   infos <- openxlsx2::read_xlsx(fichier_info) %>%
     dplyr::filter(suivi == nom_suivi) %>%
     dplyr::select(-suivi) %>%
@@ -22,6 +23,9 @@ creer_fiches <- function(nom_suivi, fichier_info, dossier_fiches, region = NULL)
 
     creer_fiche_excel(nom_suivi, fichier_info, chemin_fiche_excel, region)
     creer_fiche_web(nom_suivi, fichier_info, chemin_fiche_web, region)
+    cat("  ✓\n")
+  } else {
+      cat("  ×\n")
     }
 
 }
