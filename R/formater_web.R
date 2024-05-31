@@ -13,7 +13,7 @@ formater_web <- function(x) {
   convertir_en_lien <- function(chaine) {
 
       # Extraire le texte et le lien
-      texte <- stringr::str_extract(chaine, "(?<=texte:)(.*)(?=; lien)")
+      texte <- stringr::str_extract(chaine, "(?<=texte:)(.*)(?=;\\s*lien)")
       lien <- stringr::str_extract(chaine, "(?<=lien:)(.*)")
 
       # Créer le format de lien
@@ -35,7 +35,7 @@ formater_web <- function(x) {
 
 
   if (!is.na(x)) {
-    if (stringr::str_detect(string = x, pattern = "(?<=texte:)(.*)(?=; lien)")) {
+    if (stringr::str_detect(string = x, pattern = "(?<=texte:)(.*)(?=;\\s*lien)")) {
       convertir_en_lien(x)
     } else {
       x %>%
