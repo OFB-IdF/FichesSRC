@@ -10,6 +10,9 @@
 #' @importFrom stringr str_split str_extract str_remove_all fixed str_replace_na
 #' @importFrom tidyr complete nesting
 creer_calendrier <- function(info_mois) {
+  if (!stringr::str_detect(string = info_mois, pattern = ":"))
+    info_mois <- paste0(" :", info_mois)
+
   actions <- info_mois %>%
     stringr::str_split(pattern = "\n") %>%
     unlist() %>%
