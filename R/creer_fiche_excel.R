@@ -4,10 +4,9 @@
 #' @param fichier_info
 #' @param chemin_fiche
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom openxlsx2 wb_load wb_save
 creer_fiche_excel <- function(nom_suivi, fichier_info, chemin_fiche, region = NULL) {
   fiche <- openxlsx2::wb_load(
     file = system.file(

@@ -5,12 +5,11 @@
 #' @param chemin_fiche
 #' @param region
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom brew brew
 creer_fiche_web <- function(nom_suivi, fichier_info, chemin_fiche, region = NULL) {
-  infos <- FichesSRC::charger_informations(fichier_info, nom_suivi) %>%
+  infos <- charger_informations(fichier_info, nom_suivi) %>%
     c(region = region)
 
   brew::brew(

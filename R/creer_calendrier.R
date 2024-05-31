@@ -2,10 +2,13 @@
 #'
 #' @param info_mois
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom dplyr mutate bind_rows tibble full_join
+#' @importFrom ggplot2 ggplot geom_tile aes geom_text facet_wrap vars theme_minimal theme element_blank element_text labs scale_fill_manual
+#' @importFrom purrr map list_rbind
+#' @importFrom stringr str_split str_extract str_remove_all fixed str_replace_na
+#' @importFrom tidyr complete nesting
 creer_calendrier <- function(info_mois) {
   actions <- info_mois %>%
     stringr::str_split(pattern = "\n") %>%

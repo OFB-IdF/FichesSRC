@@ -2,10 +2,9 @@
 #'
 #' @param df
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom DT datatable
 creer_tableau <- function(df, ...) {
   df %>%
     DT::datatable(
@@ -19,10 +18,9 @@ creer_tableau <- function(df, ...) {
 #'
 #' @param stations
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom sf st_read st_drop_geometry
 creer_tableau_stations <- function(stations) {
   sf::st_read(stations, quiet = TRUE) %>%
     sf::st_drop_geometry() %>%

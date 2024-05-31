@@ -3,10 +3,9 @@
 #' @param niveau
 #' @param jours
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom ggplot2 ggplot aes geom_tile geom_text geom_point scale_fill_identity theme_void theme unit lims
 creer_graphe_expertise <- function(niveau, duree) {
   niveaux <- c("Novice", "Initié", "Formé", "Maitrise", "Expert")
 

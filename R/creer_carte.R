@@ -4,10 +4,13 @@
 #' @param limites_departements
 #' @param region
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom dplyr filter mutate
+#' @importFrom ggplot2 ggplot geom_sf aes scale_fill_manual theme_void theme
+#' @importFrom leaflet leaflet addTiles addPolygons addCircleMarkers
+#' @importFrom sf st_read st_as_sf st_geometry_type
+#' @importFrom stringr str_split_1 str_trim
 creer_carte <- function(departements, region = NULL, stations = NULL, web = FALSE) {
   if (all(!is.null(stations), !is.na(stations))) {
     stations_sf <- sf::st_read(stations, quiet = TRUE)

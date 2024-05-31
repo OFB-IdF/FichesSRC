@@ -5,10 +5,12 @@
 #' @param cellule
 #' @param valeur
 #'
-#' @return
 #' @export
 #'
 #'
+#' @importFrom magick image_read image_scale image_info
+#' @importFrom stringr str_detect
+#' @importFrom tools file_ext
 remplir_cellule <- function(classeur, feuille = 1, cellule, valeur, largeur = NULL, hauteur = NULL, unite = "cm") {
   if (any(!is.na(valeur))) {
     if ("ggplot" %in% class(valeur)) {

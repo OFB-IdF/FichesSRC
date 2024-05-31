@@ -3,9 +3,10 @@
 #' @param fichier_info
 #' @param nom_suivi
 #'
-#' @return
 #' @export
 #'
+#' @importFrom dplyr filter
+#' @importFrom openxlsx2 read_xlsx
 charger_informations <- function(fichier_info, nom_suivi = NULL) {
   infos <- openxlsx2::read_xlsx(file = fichier_info, keep_attributes = TRUE)
 
@@ -21,10 +22,10 @@ charger_informations <- function(fichier_info, nom_suivi = NULL) {
 #'
 #' @param x
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom openxlsx2 create_hyperlink
+#' @importFrom stringr str_detect str_split_1 str_remove str_trim
 formater_liens <- function(x) {
   if (!is.na(x) & stringr::str_detect(string = x, pattern = "lien:")) {
     texte <- stringr::str_split_1(x, pattern = ";")[1] %>%

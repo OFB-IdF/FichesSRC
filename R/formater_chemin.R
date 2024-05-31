@@ -2,10 +2,9 @@
 #'
 #' @param x
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom stringr str_replace_all
 formater_chemin <- function(x) {
   stringr::str_replace_all(
     string = x,

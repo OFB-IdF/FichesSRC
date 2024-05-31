@@ -5,10 +5,10 @@
 #' @param dossier_fiches
 #' @param region
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom dplyr filter select
+#' @importFrom openxlsx2 read_xlsx
 creer_fiches <- function(nom_suivi, fichier_info, dossier_fiches, region = NULL) {
   infos <- openxlsx2::read_xlsx(fichier_info) %>%
     dplyr::filter(suivi == nom_suivi) %>%
@@ -36,10 +36,10 @@ creer_fiches <- function(nom_suivi, fichier_info, dossier_fiches, region = NULL)
 #' @param dossier_fiches
 #' @param region
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom dplyr pull
+#' @importFrom openxlsx2 read_xlsx
 creer_toutes_fiches <- function(fichier_info, dossier_fiches, region = NULL) {
   suivis <- fichier_info %>%
     openxlsx2::read_xlsx() %>%

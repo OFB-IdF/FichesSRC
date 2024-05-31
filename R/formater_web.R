@@ -2,10 +2,9 @@
 #'
 #' @param x
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @importFrom stringr str_extract str_replace_all str_starts str_detect
 formater_web <- function(x) {
   expression_liens <- "(http|ftp|https)://[\\w_-]+(\\.[\\w_-]+)+([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?|www\\.[\\w_-]+(\\.[\\w_-]+)+([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?"
   expression_mail <- "([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})"
