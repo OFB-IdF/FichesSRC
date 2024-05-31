@@ -18,6 +18,4 @@ creer_fiche_web <- function(nom_suivi, fichier_info, chemin_fiche, region = NULL
     chemin_fiche
   )
 
-  quarto::quarto_render(chemin_fiche)
-
 }
