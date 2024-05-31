@@ -1,0 +1,169 @@
+---
+title: "<%= infos$intitule %>"
+date: <%= as.character(Sys.Date()) %>
+include-in-header:
+  - text: |
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+---
+
+:::::::::::::: {.columns}
+::: {.column width="75%"}
+
+<a href="<%= paste0(infos$suivi, ".xlsx") %>" class="btn btn-primary" download>
+  <i class="fas fa-file-arrow-down"></i> Télécharger la fiche
+</a>
+
+# Description
+
+<%= FichesSRC::formater_web(infos$description) %>
+
+
+## Objectif
+
+<%= FichesSRC::formater_web(infos$objectif) %>
+
+## Utilisation
+
+<%= FichesSRC::formater_web(infos$utilisation) %>
+:::
+::: {.column width="5%"}
+:::
+::: {.column width="20%"}
+![](<%= infos$logo%>){width=100%}
+
+<%= FichesSRC::formater_web(infos$animation) %>
+
+<b>Partenaires</b>
+<%= FichesSRC::formater_web(infos$partenaires) %>
+:::
+::::::::::::::
+
+# Le suivi
+
+## Localisation
+<%=
+if (!is.na(infos$fichier_stations)) {
+paste0("
+::: panel-tabset
+### Carte
+```{r, echo=FALSE}
+FichesSRC::creer_carte(
+  departements = '", infos$departements, "',
+  region = '", infos$region, "',
+  stations = '", FichesSRC::formater_chemin(infos$fichier_stations), "',
+  web = TRUE
+  )
+```
+
+### Tableau des sites
+```{r, echo=FALSE}
+FichesSRC::creer_tableau_stations(
+  stations = '", FichesSRC::formater_chemin(infos$fichier_stations), "'
+  )
+```
+
+:::
+")
+} else {
+paste0("
+```{r, echo=FALSE}
+FichesSRC::creer_carte(
+  departements = '", infos$departements, "',
+  region = '", infos$region, "',
+  stations = NA,
+  web = TRUE
+  )
+```
+")
+}
+%>
+
+## Temporalité
+:::::::::::::: {.columns}
+::: {.column width="67%"}
+
+<%=
+paste0(
+"
+```{r, echo=FALSE}
+FichesSRC::creer_calendrier('", infos$mois, "')
+```
+"
+)
+%>
+
+:::
+::: {.column width="5%"}
+:::
+::: {.column width="28%"}
+<%= FichesSRC::formater_web(infos$temporalite) %>
+:::
+::::::::::::::
+
+# Logistique
+
+## Rôles
+:::::::::::::: {.columns}
+::: {.column width="33%"}
+<b>National</b>
+
+<%= FichesSRC::formater_web(infos$role_national) %>
+:::
+::: {.column width="33%"}
+<b>Régional</b>
+
+<%= FichesSRC::formater_web(infos$role_regional) %>
+:::
+::: {.column width="33%"}
+<b>Départemental</b>
+
+<%= FichesSRC::formater_web(infos$role_departemental) %>
+:::
+::::::::::::::
+
+## Correspondants
+
+## Protocole
+:::::::::::::: {.columns}
+::: {.column width="60%"}
+### Principe
+
+<%= FichesSRC::formater_web(infos$protocole) %>
+:::
+::: {.column width="5%"}
+:::
+::: {.column width="35%"}
+### Matériel
+
+<%= FichesSRC::formater_web(infos$materiel) %>
+:::
+::::::::::::::
+
+## Les données
+
+:::::::::::::: {.columns}
+::: {.column width="60%"}
+### Saisie
+
+<%= FichesSRC::formater_web(infos$saisie_validation) %>
+:::
+::: {.column width="5%"}
+:::
+::: {.column width="35%"}
+### Diffusion
+
+<%= FichesSRC::formater_web(infos$diffusion) %>
+:::
+::::::::::::::
+
+<hr>
+
+<div class="card">
+  <b>En savoir plus</b><br>
+  <%= ifelse(is.na(infos$plus_recto1), "", paste0(FichesSRC::formater_web(infos$plus_recto1), "<br>")) %>
+  <%= ifelse(is.na(infos$plus_recto2), "", paste0(FichesSRC::formater_web(infos$plus_recto2), "<br>")) %>
+  <%= ifelse(is.na(infos$plus_recto3), "", paste0(FichesSRC::formater_web(infos$plus_recto3), "<br>")) %>
+  <%= ifelse(is.na(infos$plus_verso1), "", paste0(FichesSRC::formater_web(infos$plus_verso1), "<br>")) %>
+  <%= ifelse(is.na(infos$plus_verso2), "", paste0(FichesSRC::formater_web(infos$plus_verso2), "<br>")) %>
+  <%= ifelse(is.na(infos$plus_verso3), "", paste0(FichesSRC::formater_web(infos$plus_verso3), "<br>")) %>
+</div>
