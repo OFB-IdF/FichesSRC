@@ -34,6 +34,7 @@ include-in-header:
 <%= FichesSRC::formater_web(infos$animation) %>
 
 <b>Partenaires</b>
+
 <%= FichesSRC::formater_web(infos$partenaires) %>
 :::
 ::::::::::::::
