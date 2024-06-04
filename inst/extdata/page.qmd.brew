@@ -41,6 +41,8 @@ include-in-header:
 # Le suivi
 
 ## Localisation
+:::::::::::::: {.columns}
+::: {.column width="72%"}
 <%=
 if (!is.na(infos$fichier_stations)) {
 paste0("
@@ -77,7 +79,14 @@ FichesSRC::creer_carte(
 ")
 }
 %>
-
+:::
+:::{.column width="5%"}
+:::
+:::{.column width="23%"}
+### Type de suivi
+<%= FichesSRC::formater_web(infos$forme_suivi) %>
+:::
+::::::::::::::
 ## Temporalité
 :::::::::::::: {.columns}
 ::: {.column width="67%"}
