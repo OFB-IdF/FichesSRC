@@ -40,7 +40,7 @@ formater_web <- function(x) {
     } else {
       x %>%
         stringr::str_replace_all(pattern = "\n", replacement = "<br>") %>%
-        stringr::str_replace_all(pattern = "<br>-", replacement = "\n-") %>%
+        stringr::str_replace_all(pattern = "^-", replacement = "<br>-") %>%
         stringr::str_replace_all(
           pattern = expression_liens,
           replacement = function(match) {
