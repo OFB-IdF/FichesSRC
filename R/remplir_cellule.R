@@ -36,26 +36,32 @@ remplir_cellule <- function(classeur, feuille = 1, cellule, valeur, largeur = NU
       )
     } else {
       if (stringr::str_detect(string = valeur, pattern = ".jpg$|.png$")) {
+        telechargement  <- 0
+
         if (stringr::str_detect(string = valeur, pattern = "^http")) {
           tmp <- tempfile(fileext = paste0(".", tools::file_ext(valeur)))
-          download.file(valeur, tmp, mode = "wb", quiet = TRUE)
+          telechargement = try(download.file(valeur, tmp, mode = "wb", quiet = TRUE))
 
           valeur <- tmp
         }
 
-        dimensions <- magick::image_read(valeur) %>%
-          magick::image_scale(geometry = paste0(largeur*300/2.54, "x", hauteur*300/2.54)) %>%
-          magick::image_info()
+        if (class(telechargement) != "try-error") {
+          dimensions <- magick::image_read(valeur) %>%
+            magick::image_scale(geometry = paste0(largeur*300/2.54, "x", hauteur*300/2.54)) %>%
+            magick::image_info()
 
-        classeur$add_image(
-          sheet = feuille,
-          dims = cellule,
-          file = valeur,
-          width = dimensions$width,
-          height = dimensions$height,
-          units = "px",
-          dpi = 300
-        )
+          classeur$add_image(
+            sheet = feuille,
+            dims = cellule,
+            file = valeur,
+            width = dimensions$width,
+            height = dimensions$height,
+            units = "px",
+            dpi = 300
+          )
+        }
+
+
       } else {
         if (stringr::str_detect(string = valeur, pattern = "=HYPERLINK")) {
           classeur$add_formula(
