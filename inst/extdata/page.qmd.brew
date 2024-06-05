@@ -29,7 +29,7 @@ include-in-header:
 ::: {.column width="5%"}
 :::
 ::: {.column width="20%"}
-![](<%= infos$logo%>){width=100%}
+<%= ifelse(is.na(infos$logo), "", paste0("![](", infos$logo, ")")) %>
 
 <%= FichesSRC::formater_web(infos$animation) %>
 
