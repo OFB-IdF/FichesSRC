@@ -139,7 +139,7 @@ FichesSRC::creer_calendrier('", infos$mois, "')
 paste0(
 "
 ```{r, echo=FALSE, fig.width=3, fig.height=1}
-FichesSRC::creer_graphe_expertise('", infos$expertise, "', '", ifelse(is.na(infos$temps_formation), '', infos$temps_formation), "')
+FichesSRC::creer_graphe_expertise('", infos$expertise, "', '", ifelse(is.na(infos$nombre_agents), '', infos$nombre_agents), "')
 ```
 "
 )

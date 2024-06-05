@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @importFrom ggplot2 ggplot aes geom_tile geom_text geom_point scale_fill_identity theme_void theme unit lims
-creer_graphe_expertise <- function(niveau, duree) {
+creer_graphe_expertise <- function(niveau, nombre_agents) {
   niveaux <- c("Novice", "Initié", "Formé", "Maitrise", "Expert")
 
   ggplot2::ggplot(mapping = ggplot2::aes(x = niveau)) +
@@ -27,8 +27,8 @@ creer_graphe_expertise <- function(niveau, duree) {
       shape = 21, size = 12, fill = "white", y = 1.75
     ) +
     ggplot2::geom_text(
-      data = data.frame(niveau = factor(niveau, levels = niveaux), duree = duree),
-      mapping = ggplot2::aes(label = duree),
+      data = data.frame(niveau = factor(niveau, levels = niveaux), nombre_agents = nombre_agents),
+      mapping = ggplot2::aes(label = nombre_agents),
       y = 1.75
     ) +
     ggplot2::scale_fill_identity() +

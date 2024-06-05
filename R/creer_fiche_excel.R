@@ -139,7 +139,7 @@ creer_fiche_excel <- function(nom_suivi, fichier_info, chemin_fiche, region = NU
   remplir_cellule(
     classeur = fiche,
     cellule = "O6",
-    valeur = creer_graphe_expertise(niveau = infos$expertise, duree = infos$temps_formation),
+    valeur = creer_graphe_expertise(niveau = infos$expertise, nombre_agents = infos$nombre_agents),
     largeur = 5.8,
     hauteur = 1.6
   )
