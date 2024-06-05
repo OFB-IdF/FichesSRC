@@ -131,6 +131,29 @@ FichesSRC::creer_calendrier('", infos$mois, "')
 :::
 ::::::::::::::
 
+## Compétences et formations
+
+:::::::::::::: {.columns}
+::: {.column width="35%"}
+<%=
+paste0(
+"
+```{r, echo=FALSE, fig.width=3, fig.height=1}
+FichesSRC::creer_graphe_expertise('", infos$expertise, "', '", ifelse(is.na(infos$temps_formation), '', infos$temps_formation), "')
+```
+"
+)
+%>
+
+:::
+::: {.column width="5%"}
+:::
+::: {.column width="60%"}
+<%= FichesSRC::formater_web(infos$droits_formation) %>
+:::
+::::::::::::::
+
+
 ## Correspondants
 
 ## Protocole
