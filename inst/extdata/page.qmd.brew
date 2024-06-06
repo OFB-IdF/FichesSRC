@@ -5,17 +5,16 @@ include-in-header:
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 ---
 
-<small>Fiche éditée le <%= as.character(Sys.Date()) %></small>
-
-:::::::::::::: {.columns}
-::: {.column width="75%"}
-
 <a href="<%= paste0(infos$suivi, ".xlsx") %>" class="btn btn-primary" download>
   <i class="fas fa-file-arrow-down"></i> Télécharger la fiche
 </a>
 
+<small>Fiche éditée le <%= as.character(Sys.Date()) %></small>
+
 # Description
 
+:::::::::::::: {.columns}
+::: {.column width="70%"}
 <%= FichesSRC::formater_web(infos$description) %>
 
 
@@ -29,7 +28,7 @@ include-in-header:
 :::
 ::: {.column width="5%"}
 :::
-::: {.column width="20%"}
+::: {.column width="25%"}
 <%= ifelse(is.na(infos$logo), "", paste0("![](", infos$logo, ")")) %>
 
 <%= FichesSRC::formater_web(infos$animation) %>
