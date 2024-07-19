@@ -27,7 +27,7 @@ include-in-header:
 # Description
 
 :::::::::::::: {.columns}
-::: {.column width="70%"}
+::: {.column width="65%"}
 <%= FichesSRC::formater_web(infos$description) %>
 
 
@@ -41,7 +41,7 @@ include-in-header:
 :::
 ::: {.column width="5%"}
 :::
-::: {.column width="25%"}
+::: {.column width="30%"}
 <%= FichesSRC::formater_web(infos$animation) %>
 
 <b>Partenaires</b>
@@ -164,8 +164,6 @@ FichesSRC::creer_graphe_expertise('", infos$expertise, "', '", ifelse(is.na(info
 :::
 ::::::::::::::
 
-
-## Correspondants
 
 ## Protocole
 :::::::::::::: {.columns}

@@ -8,7 +8,7 @@
 formater_web <- function(x) {
   expression_liens <- "(http|ftp|https)://[\\w_-]+(\\.[\\w_-]+)+([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?|www\\.[\\w_-]+(\\.[\\w_-]+)+([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?"
   expression_mail <- "([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})"
-  expression_gras <- "Animation nationale|Animation régionale|Suivi scientifique|Référence technique|Assistance|Courriel du réseau"
+  expression_gras <- "Animation nationale|Animation régionale|Suivi scientifique|Correspondants départementaux|Référence technique|Assistance|Courriel du réseau"
 
   convertir_en_lien <- function(chaine) {
 
