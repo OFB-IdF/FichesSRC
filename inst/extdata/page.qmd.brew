@@ -102,26 +102,17 @@ FichesSRC::creer_carte(
 :::
 ::::::::::::::
 ## Temporalité
-:::::::::::::: {.columns}
-::: {.column width="67%"}
+<%= FichesSRC::formater_web(infos$temporalite) %>
 
 <%=
 paste0(
 "
-```{r, echo=FALSE}
-FichesSRC::creer_calendrier('", infos$mois, "')
+```{r, fig.height=2, fig.width=9, echo=FALSE}
+FichesSRC::creer_calendrier('", infos$mois, "', web = TRUE)
 ```
 "
 )
 %>
-
-:::
-::: {.column width="5%"}
-:::
-::: {.column width="28%"}
-<%= FichesSRC::formater_web(infos$temporalite) %>
-:::
-::::::::::::::
 
 # Logistique
 

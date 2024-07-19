@@ -9,7 +9,7 @@
 #' @importFrom purrr map list_rbind
 #' @importFrom stringr str_split str_extract str_remove_all fixed str_replace_na
 #' @importFrom tidyr complete nesting
-creer_calendrier <- function(info_mois) {
+creer_calendrier <- function(info_mois, web = FALSE) {
   if (!stringr::str_detect(string = info_mois, pattern = ":"))
     info_mois <- paste0(" :", info_mois)
 
@@ -70,7 +70,7 @@ creer_calendrier <- function(info_mois) {
     dplyr::mutate(action = stringr::str_replace_na(action, "") %>%
                     factor(levels = c(actions, "")))
 
-  periodes %>%
+  calendrier <- periodes %>%
     ggplot2::ggplot() +
     ggplot2::geom_tile(
       mapping = ggplot2::aes(x = mois, y = action, fill = action_realisee),
@@ -79,7 +79,6 @@ creer_calendrier <- function(info_mois) {
     ggplot2::geom_text(
       mapping = ggplot2::aes(x = mois, label = mois_lettre, y = action)
     ) +
-    ggplot2::facet_wrap(ggplot2::vars(semestre), nrow = 2, scales = "free_x") +
     ggplot2::theme_minimal() +
     ggplot2::theme(
       axis.text.x = ggplot2::element_blank(),
@@ -90,5 +89,13 @@ creer_calendrier <- function(info_mois) {
     ) +
     ggplot2::labs(x = "", y = "") +
     ggplot2::scale_fill_manual(values = c(`TRUE` = "darkgrey", `FALSE` = "white"))
+
+  if (!web) {
+    calendrier +
+      ggplot2::facet_wrap(ggplot2::vars(semestre), nrow = 2, scales = "free_x")
+  } else {
+    calendrier
+  }
+
 
 }

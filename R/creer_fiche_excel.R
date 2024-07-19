@@ -83,7 +83,7 @@ creer_fiche_excel <- function(nom_suivi, fichier_info, chemin_fiche, region = NU
   remplir_cellule(
     classeur = fiche,
     cellule = "B38",
-    valeur = creer_calendrier(infos$mois),
+    valeur = creer_calendrier(infos$mois, web = FALSE),
     largeur = 11,
     hauteur = 3
   )
