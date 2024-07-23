@@ -27,6 +27,7 @@ creer_calendrier_global <- function(fichier_info) {
 
   periodes %>%
     dplyr::filter(mois_lettre == "") %>%
+    dplyr::mutate(mois = as.numeric(as.character(mois))) %>%
     ggplot2::ggplot() +
     ggplot2::geom_tile(
       mapping = ggplot2::aes(x = mois, y = action, alpha = action_realisee),
@@ -35,10 +36,9 @@ creer_calendrier_global <- function(fichier_info) {
     ggplot2::geom_text(
       mapping = ggplot2::aes(x = mois, label = mois_lettre, y = action)
     ) +
-    ggplot2::scale_y_discrete(position = "right") +
     ggplot2::theme_minimal() +
     ggplot2::theme(
-      axis.text.x = ggplot2::element_blank(),
+      # axis.text.x = ggplot2::element_blank(),
       axis.text.y.left = ggplot2::element_blank(),
       axis.text.y.right = ggplot2::element_text(hjust = 0, face = "bold"),
       strip.text = ggplot2::element_text(face = "bold", size = 12, hjust = 0),
@@ -50,7 +50,15 @@ creer_calendrier_global <- function(fichier_info) {
       strip.text.y = ggplot2::element_text(angle = 0, hjust = 1)
     ) +
     ggplot2::labs(x = "", y = "") +
+    ggplot2::scale_x_continuous(
+      breaks = seq(12),
+      labels = c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"),
+      sec.axis = ggplot2::dup_axis()
+      ) +
+    ggplot2::scale_y_discrete(position = "right") +
     ggplot2::scale_alpha_manual(values = c(`TRUE` = 1, `FALSE` = 0)) +
-    ggplot2::facet_wrap(ggplot2::vars(suivi), scales = "free_y", ncol = 1)
+    ggplot2::facet_wrap(
+      ggplot2::vars(suivi), scales = "free_y", ncol = 1,
+      )
 
 }
