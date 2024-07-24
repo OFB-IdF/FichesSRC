@@ -135,6 +135,18 @@ FichesSRC::creer_calendrier('", infos$mois, "', web = TRUE)
 :::
 ::::::::::::::
 
+## Ressources nécessaires
+
+:::::::::::::: {.columns}
+::: {.column width="50%"}
+<img src="www/history.png" height="50"><%= paste0("  ", FichesSRC::formater_web(infos$duree)) %>
+:::
+::: {.column width="50%"}
+<img src="www/standing-up-man.png" height="50"><%= paste0("  ", FichesSRC::formater_web(infos$nombre_agents)) %>
+:::
+::::::::::::::
+
+
 ## Compétences et formations
 
 :::::::::::::: {.columns}
@@ -143,7 +155,7 @@ FichesSRC::creer_calendrier('", infos$mois, "', web = TRUE)
 paste0(
 "
 ```{r, echo=FALSE, fig.width=3, fig.height=1}
-FichesSRC::creer_graphe_expertise('", infos$expertise, "', '", ifelse(is.na(infos$nombre_agents), '', infos$nombre_agents), "')
+FichesSRC::creer_graphe_expertise('", infos$expertise, "')
 ```
 "
 )
