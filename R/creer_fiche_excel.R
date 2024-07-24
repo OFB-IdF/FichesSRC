@@ -102,14 +102,8 @@ creer_fiche_excel <- function(nom_suivi, fichier_info, chemin_fiche, region = NU
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "G28",
+    cellule = "G31",
     valeur = infos$partenaires
-  )
-
-  remplir_cellule(
-    classeur = fiche,
-    cellule = "G38",
-    valeur = infos$transversalite
   )
 
   remplir_cellule(
@@ -188,21 +182,46 @@ creer_fiche_excel <- function(nom_suivi, fichier_info, chemin_fiche, region = NU
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "K29",
-    valeur = infos$autres_releves
-  )
-
-  remplir_cellule(
-    classeur = fiche,
-    cellule = "L33",
+    cellule = "L29",
     valeur = infos$saisie_validation
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "O33",
+    cellule = "O29",
     valeur = infos$diffusion
   )
+
+  remplir_cellule(
+    classeur = fiche,
+    cellule = "K29",
+    valeur = infos$autres_releves
+  )
+
+  if (!is.na(infos$autres_releves)) {
+    remplir_cellule(
+      classeur = fiche,
+      cellule = "K43",
+      valeur = paste0("Autres relevés: ", infos$autres_releves)
+    )
+
+    if (!is.na(infos$transversalite)) {
+      remplir_cellule(
+        classeur = fiche,
+        cellule = "K45",
+        valeur = paste0("Transversalité: ", infos$transversalite)
+      )
+    }
+  } else {
+    if (!is.na(infos$transversalite)) {
+      remplir_cellule(
+        classeur = fiche,
+        cellule = "K43",
+        valeur = paste0("Transversalité: ", infos$transversalite)
+      )
+    }
+
+  }
 
   remplir_cellule(
     classeur = fiche,
