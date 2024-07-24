@@ -138,11 +138,17 @@ FichesSRC::creer_calendrier('", infos$mois, "', web = TRUE)
 ## Ressources nécessaires
 
 :::::::::::::: {.columns}
-::: {.column width="50%"}
-<img src="www/history.png" height="50"><%= paste0("  ", FichesSRC::formater_web(infos$duree)) %>
+::: {.column width="10%"}
+<img src="www/history.png" height="50">
 :::
-::: {.column width="50%"}
-<img src="www/standing-up-man.png" height="50"><%= paste0("  ", FichesSRC::formater_web(infos$nombre_agents)) %>
+::: {.column width="40%"}
+<%= paste0("  ", FichesSRC::formater_web(infos$duree)) %>
+:::
+::: {.column width="10%"}
+<img src="www/standing-up-man.png" height="50">
+:::
+::: {.column width="40%"}
+<%= paste0("  ", FichesSRC::formater_web(infos$nombre_agents)) %>
 :::
 ::::::::::::::
 
