@@ -192,6 +192,15 @@ FichesSRC::creer_graphe_expertise('", infos$expertise, "')
 :::
 ::::::::::::::
 
+<%= 
+if (!is.na(infos$autres_releves)) {
+paste0(
+  '## Autres relevés  \n',
+  FichesSRC::formater_web(infos$autres_releves)
+  )
+}
+%>
+
 ## Les données
 
 :::::::::::::: {.columns}
