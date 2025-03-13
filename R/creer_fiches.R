@@ -43,6 +43,7 @@ creer_fiches <- function(nom_suivi, fichier_info, dossier_fiches, region = NULL)
 creer_toutes_fiches <- function(fichier_info, dossier_fiches, region = NULL) {
   suivis <- fichier_info %>%
     openxlsx2::read_xlsx() %>%
+    dplyr::filter(publiable == "oui") |>
     dplyr::pull(suivi)
 
   for (x in suivis) {
