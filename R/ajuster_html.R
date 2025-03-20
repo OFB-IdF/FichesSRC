@@ -1,11 +1,20 @@
-#' Title
+#' Adjust HTML Files for Web Display
 #'
-#' @param dossier
+#' This function processes HTML files in a directory to adjust navigation links and structure.
+#' It modifies navbar links, updates the table of contents structure, and customizes the navigation
+#' for a better web presentation.
 #'
-#' @return
+#' @param dossier Path to the directory containing HTML files to be adjusted
+#'
+#' @return No return value, called for side effects (modifying HTML files)
 #' @export
 #'
 #' @examples
+#' # Adjust HTML files in the current directory
+#' ajuster_html("./")
+#'
+#' # Adjust HTML files in a specific output directory
+#' ajuster_html("./output/html/")
 ajuster_html <- function(dossier) {
   list.files(dossier, pattern = ".html", full.names = TRUE) %>%
     purrr::walk(

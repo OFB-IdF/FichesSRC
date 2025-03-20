@@ -1,11 +1,25 @@
-#' Title
+#' Format Month Information for Calendar Display
 #'
-#' @param info_mois
+#' This function processes month-based information and formats it for calendar display.
+#' It takes a string containing month information in a specific format and converts it
+#' into a structured format suitable for calendar visualization.
 #'
-#' @return
-#' @export
+#' @param info_mois A character string containing month information in the format
+#'                  "action:months" where months are comma-separated numbers (1-12).
+#'                  Multiple entries can be separated by newlines.
+#'
+#' @return A data frame containing formatted month information with columns for
+#'         months and corresponding actions. The data is structured for easy
+#'         integration with calendar visualization functions.
 #'
 #' @examples
+#' # Format simple month information
+#' formater_mois("Action 1:1,2,3\nAction 2:6,7,8")
+#'
+#' # Format month information with empty action
+#' formater_mois(":1,2,3")
+#'
+#' @export
 formater_mois <- function(info_mois) {
   if (!is.na(info_mois)) {
     if (!stringr::str_detect(string = info_mois, pattern = ":"))

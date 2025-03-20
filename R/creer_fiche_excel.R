@@ -1,8 +1,23 @@
-#' Title
+#' Create Excel Sheet for Tracking
 #'
-#' @param nom_suivi
-#' @param fichier_info
-#' @param chemin_fiche
+#' This function creates an Excel sheet for tracking purposes using a template.
+#' It loads a template Excel file, fills it with information from a metadata file,
+#' and saves it to a specified location.
+#'
+#' @param nom_suivi The tracking name to filter the information
+#' @param fichier_info Path to the Excel file containing the metadata information
+#' @param chemin_fiche Path where the generated Excel file should be saved
+#' @param region Optional parameter to specify a region for filtering
+#'
+#' @return No return value, called for side effects (creating Excel file)
+#'
+#' @examples
+#' # Create a tracking sheet
+#' creer_fiche_excel(
+#'   nom_suivi = "suivi_1",
+#'   fichier_info = "data/metadata.xlsx",
+#'   chemin_fiche = "output/fiche_suivi_1.xlsx"
+#' )
 #'
 #' @export
 #'

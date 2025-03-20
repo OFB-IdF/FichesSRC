@@ -1,6 +1,24 @@
-#' Title
+#' Format Text for Web Display
 #'
-#' @param x
+#' This function formats text for web display by converting special text patterns into HTML.
+#' It handles hyperlinks, email addresses, and specific keywords that need to be emphasized.
+#' The function recognizes text in the format "texte:displayed text;lien:url" and converts it
+#' into proper HTML anchor tags.
+#'
+#' @param x A character string to be formatted. Can contain special patterns like
+#'          "texte:displayed text;lien:url" for links, email addresses, or keywords
+#'          that need special formatting.
+#'
+#' @return A character string with HTML formatting applied. Links are converted to
+#'         <a> tags, newlines to <br> tags, and certain keywords are emphasized.
+#'         Returns NA if input is NA.
+#'
+#' @examples
+#' # Format a simple link
+#' formater_web("texte:Visit our site;lien:https://example.com")
+#'
+#' # Format text with newlines
+#' formater_web("Line 1\nLine 2")
 #'
 #' @export
 #'
