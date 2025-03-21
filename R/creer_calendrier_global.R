@@ -16,9 +16,8 @@ creer_calendrier_global <- function(fichier_info) {
     dplyr::group_split() |>
     purrr::map(function(calendrier) {
       if (!is.na(calendrier$mois)) {
-        calendrier$mois |>
-          formater_mois() |>
-          '$'("periodes") |>
+        resultat <- formater_mois(calendrier$mois)
+        resultat |>
           dplyr::mutate(suivi = calendrier$suivi)
       }
     }) |>
