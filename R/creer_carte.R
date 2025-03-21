@@ -16,26 +16,26 @@ creer_carte <- function(departements, region = NULL, stations = NULL, web = FALS
     stations_sf <- sf::st_read(stations, quiet = TRUE)
   }
 
-  departements <- departements %>%
-    stringr::str_split_1(pattern = ",") %>%
+  departements <- departements |>
+    stringr::str_split_1(pattern = ",") |>
     stringr::str_trim()
 
-  donnees_carte <- limites_departements %>%
-    sf::st_as_sf() %>%
+  donnees_carte <- limites_departements |>
+    sf::st_as_sf() |>
     (function(df) {
       if (is.null(region)) {
         df
       } else {
-        df %>%
+        df |>
           dplyr::filter(insee_reg %in% region)
       }
-    }) %>%
+    }) |>
     dplyr::mutate(selected = insee_dep %in% departements)
 
   if (web) {
-    carte <- donnees_carte %>%
-      leaflet::leaflet() %>%
-      leaflet::addTiles() %>%
+    carte <- donnees_carte |>
+      leaflet::leaflet() |>
+      leaflet::addTiles() |>
       leaflet::addPolygons(
         weight = 2,
         color = "black",
@@ -47,7 +47,7 @@ creer_carte <- function(departements, region = NULL, stations = NULL, web = FALS
 
     if (all(!is.null(stations), !is.na(stations))) {
       if (unique(sf::st_geometry_type(stations_sf)) == "POINT")
-        carte <- carte %>%
+        carte <- carte |>
           leaflet::addCircleMarkers(
             data = stations_sf,
             fillColor = "black",
@@ -55,10 +55,10 @@ creer_carte <- function(departements, region = NULL, stations = NULL, web = FALS
             stroke = FALSE,
             radius = 5,
             label = ~libelle_station
-            )
+          )
     }
   } else {
-    carte <- donnees_carte %>%
+    carte <- donnees_carte |>
       ggplot2::ggplot() +
       ggplot2::geom_sf(
         mapping = ggplot2::aes(fill = selected),

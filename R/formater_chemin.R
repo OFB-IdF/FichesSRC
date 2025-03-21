@@ -10,6 +10,5 @@ formater_chemin <- function(x) {
     string = x,
     pattern = "\\\\",
     replacement = "\\\\\\\\"
-    )
-
+  )
 }

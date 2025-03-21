@@ -10,13 +10,9 @@
 #' @importFrom stringr str_split str_extract str_remove_all fixed str_replace_na
 #' @importFrom tidyr complete nesting
 creer_calendrier <- function(info_mois, web = FALSE) {
+  periodes <- formater_mois(info_mois)
 
-  infos_mois_format <- formater_mois(info_mois)
-
-  periodes <- infos_mois_format$periodes
-  actions <- infos_mois_format$actions
-
-  calendrier <- periodes %>%
+  calendrier <- periodes |>
     ggplot2::ggplot() +
     ggplot2::geom_tile(
       mapping = ggplot2::aes(x = mois, y = action, fill = action_realisee),

@@ -51,12 +51,14 @@ creer_fiches <- function(nom_suivi, fichier_info, dossier_fiches, region = NULL)
     charger_informations(suivi = nom_suivi, region = region)
 
   if (nrow(infos) > 0) {
+    chemin_fiche_excel <- file.path(dossier_fiches, paste0(nom_suivi, ".xlsx"))
     chemin_fiche_web   <- file.path(dossier_fiches, paste0(nom_suivi, ".qmd"))
 
+    creer_fiche_excel(nom_suivi, infos, chemin_fiche_excel, region)
     creer_fiche_web(infos, chemin_fiche_web, region)
     cat("  ✓\n")
   } else {
-    cat("  ×\n")
+    cat("  ✗\n")
   }
 }
 

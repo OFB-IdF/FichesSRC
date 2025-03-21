@@ -23,7 +23,7 @@ remplir_cellule <- function(classeur, feuille = 1, cellule, valeur, largeur = NU
         width = largeur,
         height = hauteur,
         units = unite
-        )
+      )
 
       classeur$add_image(
         sheet = feuille,
@@ -40,14 +40,14 @@ remplir_cellule <- function(classeur, feuille = 1, cellule, valeur, largeur = NU
 
         if (stringr::str_detect(string = valeur, pattern = "^http")) {
           tmp <- tempfile(fileext = paste0(".", tools::file_ext(valeur)))
-          telechargement = try(download.file(valeur, tmp, mode = "wb", quiet = TRUE))
+          telechargement <- try(download.file(valeur, tmp, mode = "wb", quiet = TRUE))
 
           valeur <- tmp
         }
 
         if (class(telechargement) != "try-error") {
-          dimensions <- magick::image_read(valeur) %>%
-            magick::image_scale(geometry = paste0(largeur*300/2.54, "x", hauteur*300/2.54)) %>%
+          dimensions <- magick::image_read(valeur) |>
+            magick::image_scale(geometry = paste0(largeur * 300 / 2.54, "x", hauteur * 300 / 2.54)) |>
             magick::image_info()
 
           classeur$add_image(

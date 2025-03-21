@@ -82,7 +82,7 @@ creer_fiche_excel <- function(nom_suivi, infos, chemin_fiche, region = NULL) {
       departements = infos$departements,
       region = region,
       stations = infos$fichier_stations
-      ),
+    ),
     largeur = 6.8,
     hauteur = 8
   )

@@ -6,7 +6,7 @@
 #'
 #' @importFrom DT datatable
 creer_tableau <- function(df, ...) {
-  df %>%
+  df |>
     DT::datatable(
       extensions = 'Buttons',
       options = list(dom = 'lfrtipB',
@@ -22,7 +22,7 @@ creer_tableau <- function(df, ...) {
 #'
 #' @importFrom sf st_read st_drop_geometry
 creer_tableau_stations <- function(stations) {
-  sf::st_read(stations, quiet = TRUE) %>%
-    sf::st_drop_geometry() %>%
+  sf::st_read(stations, quiet = TRUE) |>
+    sf::st_drop_geometry() |>
     creer_tableau()
 }
