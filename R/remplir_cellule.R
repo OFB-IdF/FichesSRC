@@ -1,17 +1,34 @@
-#' Title
+#' Fill a Cell in an Excel Workbook
 #'
-#' @param classeur
-#' @param feuille
-#' @param cellule
-#' @param valeur
+#' This function fills a cell in an Excel workbook with various types of content.
+#' It can handle text, ggplot2 objects, and image files (local or from URLs).
+#' For images and plots, it automatically scales them to the specified dimensions.
+#'
+#' @param classeur An openxlsx2 workbook object
+#' @param feuille Sheet name or index in the workbook (default: 1)
+#' @param cellule Cell reference in Excel notation (e.g., "A1")
+#' @param valeur The value to insert: text, a ggplot2 object, or a path/URL to an image
+#' @param largeur Optional. Width of the image or plot in units specified by 'unite'
+#' @param hauteur Optional. Height of the image or plot in units specified by 'unite'
+#' @param unite Units for width and height (default: "cm")
+#'
+#' @return The modified workbook object (invisibly)
 #'
 #' @export
-#'
 #'
 #' @importFrom magick image_read image_scale image_info
 #' @importFrom stringr str_detect
 #' @importFrom tools file_ext
 #' @importFrom ggplot2 ggsave
+#'
+#' @examples
+#' # Fill a cell with text
+#' # wb <- openxlsx2::wb_workbook()
+#' # remplir_cellule(wb, cellule = "A1", valeur = "Hello World")
+#'
+#' # Fill a cell with a ggplot2 object
+#' # p <- ggplot2::ggplot(mtcars, ggplot2::aes(x = mpg, y = hp)) + ggplot2::geom_point()
+#' # remplir_cellule(wb, cellule = "A5", valeur = p, largeur = 10, hauteur = 8)
 remplir_cellule <- function(classeur, feuille = 1, cellule, valeur, largeur = NULL, hauteur = NULL, unite = "cm") {
   if (any(!is.na(valeur))) {
     if ("ggplot" %in% class(valeur)) {

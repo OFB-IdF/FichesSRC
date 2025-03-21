@@ -1,6 +1,14 @@
-#' Title
+#' Create a Calendar Visualization for Monitoring Activities
 #'
-#' @param info_mois
+#' This function creates a calendar-like visualization showing when monitoring activities
+#' take place throughout the year. It processes month data and creates a ggplot2 visualization
+#' with months on the x-axis and activities on the y-axis.
+#'
+#' @param info_mois A data frame containing month headers and activity markers in a specific format
+#' @param web Logical. If TRUE, creates a single calendar visualization; if FALSE, splits the calendar
+#'   into two semesters using facet_wrap
+#'
+#' @return A ggplot2 object representing the calendar visualization
 #'
 #' @export
 #'
@@ -9,6 +17,11 @@
 #' @importFrom purrr map list_rbind
 #' @importFrom stringr str_split str_extract str_remove_all fixed str_replace_na
 #' @importFrom tidyr complete nesting
+#'
+#' @examples
+#' # Create a calendar visualization for web display
+#' # Assuming info_mois contains properly formatted month data
+#' creer_calendrier(info_mois, web = TRUE)
 creer_calendrier <- function(info_mois, web = FALSE) {
   periodes <- formater_mois(info_mois)
 

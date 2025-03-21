@@ -1,11 +1,19 @@
-#' Title
+#' Create a Global Calendar Visualization for All Monitoring Activities
 #'
-#' @param fichier_info
+#' This function creates a comprehensive calendar visualization showing when all monitoring
+#' activities take place throughout the year. It reads data from an Excel file containing
+#' monitoring information and creates a ggplot2 visualization with months on the x-axis
+#' and activities on the y-axis, grouped by monitoring type.
 #'
-#' @return
+#' @param fichier_info Path to an Excel file containing monitoring information with
+#'   columns for 'suivi' (monitoring name) and 'mois' (month data)
+#'
+#' @return A ggplot2 object representing the global calendar visualization
 #' @export
 #'
 #' @examples
+#' # Create a global calendar visualization from an Excel file
+#' # creer_calendrier_global("path/to/monitoring_info.xlsx")
 creer_calendrier_global <- function(fichier_info) {
   calendriers <- openxlsx2::read_xlsx(fichier_info) |>
     dplyr::select(suivi = intitule, mois) |>
