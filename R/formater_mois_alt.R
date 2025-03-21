@@ -16,8 +16,8 @@ formater_mois <- function(mois_data) {
     as.character(mois_data[7, c("C", "D", "E", "F", "G", "H")])
   )
   realisation_action_3 <- c(
-    as.character(mois_data[3, c("C", "D", "E", "F", "G", "H")]), 
-    as.character(mois_data[7, c("C", "D", "E", "F", "G", "H")])
+    as.character(mois_data[4, c("C", "D", "E", "F", "G", "H")]), 
+    as.character(mois_data[8, c("C", "D", "E", "F", "G", "H")])
   )
   # Extract month headers from first and fifth rows
   month_headers <- c(
