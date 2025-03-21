@@ -5,7 +5,7 @@
 #' and saves it to a specified location.
 #'
 #' @param nom_suivi The tracking name to filter the information
-#' @param fichier_info Path to the Excel file containing the metadata information
+#' @param infos Path to the Excel file containing the metadata information
 #' @param chemin_fiche Path where the generated Excel file should be saved
 #' @param region Optional parameter to specify a region for filtering
 #'
@@ -22,7 +22,7 @@
 #' @export
 #'
 #' @importFrom openxlsx2 wb_load wb_save
-creer_fiche_excel <- function(nom_suivi, fichier_info, chemin_fiche, region = NULL) {
+creer_fiche_excel <- function(nom_suivi, infos, chemin_fiche, region = NULL) {
   fiche <- openxlsx2::wb_load(
     file = system.file(
       "extdata", "fiche.xlsx",
@@ -30,8 +30,6 @@ creer_fiche_excel <- function(nom_suivi, fichier_info, chemin_fiche, region = NU
     ),
     sheet = 1
   )
-
-  infos <- charger_informations(fichier_info, nom_suivi = nom_suivi)
 
   remplir_cellule(
     classeur = fiche,
@@ -124,19 +122,19 @@ creer_fiche_excel <- function(nom_suivi, fichier_info, chemin_fiche, region = NU
   remplir_cellule(
     classeur = fiche,
     cellule = "C47",
-    valeur = formater_liens(infos$plus_recto1)
+    valeur = formater_liens(infos$plus_recto1, target = "excel")
   )
 
   remplir_cellule(
     classeur = fiche,
     cellule = "C48",
-    valeur = formater_liens(infos$plus_recto2)
+    valeur = formater_liens(infos$plus_recto2, target = "excel")
   )
 
   remplir_cellule(
     classeur = fiche,
     cellule = "C49",
-    valeur = formater_liens(infos$plus_recto3)
+    valeur = formater_liens(infos$plus_recto3, target = "excel")
   )
 
   remplir_cellule(
@@ -241,19 +239,19 @@ creer_fiche_excel <- function(nom_suivi, fichier_info, chemin_fiche, region = NU
   remplir_cellule(
     classeur = fiche,
     cellule = "L47",
-    valeur = formater_liens(infos$plus_verso1)
+    valeur = formater_liens(infos$plus_verso1, target = "excel")
   )
 
   remplir_cellule(
     classeur = fiche,
     cellule = "L48",
-    valeur = formater_liens(infos$plus_verso2)
+    valeur = formater_liens(infos$plus_verso2, target = "excel")
   )
 
   remplir_cellule(
     classeur = fiche,
     cellule = "L49",
-    valeur = formater_liens(infos$plus_verso3)
+    valeur = formater_liens(infos$plus_verso3, target = "excel")
   )
 
   openxlsx2::wb_save(
