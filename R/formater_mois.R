@@ -1,9 +1,29 @@
-#' Format month data from a calendar-like structure
+#' Format Month Data from a Calendar-like Structure
 #'
-#' @param mois_data A data frame containing month headers and activity markers
+#' This function processes a data frame containing month headers and activity markers
+#' from a calendar-like structure and formats it into a structured data frame for use
+#' in calendar visualizations.
 #'
-#' @return A list with actions and periodes components
+#' @param mois_data A data frame containing month headers and activity markers in columns B-H
+#'   and rows 1-8, with month names in rows 1 and 5, and activity markers in rows 2-4 and 6-8
+#'
+#' @return A data frame with columns for month number (mois), month name (mois_lettre),
+#'   action name (action), whether the action is performed in that month (action_realisee),
+#'   and semester (semestre)
 #' @export
+#'
+#' @examples
+#' # Example with a properly formatted mois_data data frame
+#' # mois_data <- data.frame(
+#' #   B = c("Mois", "Action 1", "Action 2", "Action 3", "", "", "", ""),
+#' #   C = c("Jan", "X", "", "", "Jul", "X", "", ""),
+#' #   D = c("Feb", "", "X", "", "Aug", "", "X", ""),
+#' #   E = c("Mar", "", "", "X", "Sep", "", "", "X"),
+#' #   F = c("Apr", "X", "", "", "Oct", "X", "", ""),
+#' #   G = c("May", "", "X", "", "Nov", "", "X", ""),
+#' #   H = c("Jun", "", "", "X", "Dec", "", "", "X")
+#' # )
+#' # formater_mois(mois_data)
 formater_mois <- function(mois_data) {
   # Extract actions from column B if they exist
   actions <- mois_data$B[2:4]

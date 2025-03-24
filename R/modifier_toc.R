@@ -1,14 +1,29 @@
 #' Modify Table of Contents in HTML Content
 #'
 #' This function modifies the table of contents structure in HTML content by inserting
-#' new navigation elements before a target line.
+#' new navigation elements before a target line. It specifically adds structured navigation
+#' for description, objectives, utilization, and animation sections.
 #'
-#' @param html_content A character vector containing HTML content to be modified
+#' @param html_content A character vector containing HTML content to be modified,
+#'   typically the content of a Quarto-generated HTML file
 #'
-#' @return A modified character vector with updated table of contents structure
+#' @return A modified character vector with updated table of contents structure,
+#'   including new navigation elements for the monitoring sheet sections
 #' @keywords internal
 #'
 #' @importFrom stringr str_which fixed
+#'
+#' @examples
+#' \dontrun{
+#' # Read HTML content from a file
+#' html_content <- readLines("monitoring_sheet.html")
+#' 
+#' # Modify the table of contents
+#' modified_html <- modifier_toc(html_content)
+#' 
+#' # Write the modified content back to the file
+#' writeLines(modified_html, "monitoring_sheet.html")
+#' }
 modifier_toc <- function(html_content) {
   target_line <- '<li><a href="#le-suivi" id="toc-le-suivi" class="nav-link active" data-scroll-target="#le-suivi">Le suivi</a>'
   new_lines <- c(

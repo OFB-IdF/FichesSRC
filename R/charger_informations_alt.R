@@ -3,8 +3,8 @@
 #' This function processes data from a Google Sheet containing monitoring information
 #' and formats it into a structured list for use in creating monitoring sheets.
 #'
-#' @param infos A data frame containing raw information from the Google Sheet
-#' @param suivi The name of the monitoring sheet being processed
+#' @param metadata Link or ID of a Google Sheet document
+#' @param suivi_fiche The name of the monitoring sheet being processed
 #' @param region Optional. The region code to be used in the output
 #'
 #' @return A list containing formatted monitoring information including:
@@ -20,18 +20,22 @@
 #' @export
 #'
 #' @importFrom dplyr filter %>%
-charger_informations <- function(infos, suivi, region) {
+charger_informations <- function(metadata, suivi_fiche, region) {
+  infos <- googlesheets4::read_sheet(metadata, sheet = suivi_fiche, col_names = FALSE)
   colnames(infos) <- LETTERS[seq_len(ncol(infos))]
   list(
     intitule = infos$C[1],
-    suivi = suivi,
+    suivi = suivi_fiche,
     logo = infos$I[6],
     description = infos$C[8],
     objectif = infos$C[12],
     utilisation = infos$C[16],
     animation = infos$I[13],
     partenaires = infos$I[31],
-    fichiers_stations = "",
+    fichier_stations = charger_suivis(metadata) |>
+      janitor::clean_names() |>
+      dplyr::filter(suivi == suivi_fiche) |>
+      dplyr::pull(fichier_station),
     departements = infos$C[22],
     region = region,
     forme_suivi = infos$F[24],
@@ -64,4 +68,22 @@ charger_informations <- function(infos, suivi, region) {
     plus_verso2 = list(text = infos$M[48], link = infos$P[48]),
     plus_verso3 = list(text = infos$M[49], link = infos$P[49])
   )
+}
+
+#' Load monitoring information from a Google Sheet
+#'
+#' This function reads the "suivis" sheet from a Google Sheet document
+#' and filters the results to include only those marked as publishable ("publiable" = "oui").
+#'
+#' @param metadata Link or ID of a Google Sheet document
+#'
+#' @return A data frame containing information about publishable monitoring sheets
+#'
+#' @export
+#'
+#' @importFrom dplyr filter
+#' @importFrom googlesheets4 read_sheet
+charger_suivis <- function(metadata) {
+  googlesheets4::read_sheet(metadata, sheet = "suivis") |>
+    dplyr::filter(publiable == "oui")
 }

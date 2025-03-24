@@ -5,7 +5,7 @@
 #' monitoring information and creates a ggplot2 visualization with months on the x-axis
 #' and activities on the y-axis, grouped by monitoring type.
 #'
-#' @param fichier_info Path to an Excel file containing monitoring information with
+#' @param metadata Link or ID of a Google Sheet document containing monitoring information with
 #'   columns for 'suivi' (monitoring name) and 'mois' (month data)
 #'
 #' @return A ggplot2 object representing the global calendar visualization
@@ -14,35 +14,29 @@
 #' @examples
 #' # Create a global calendar visualization from an Excel file
 #' # creer_calendrier_global("path/to/monitoring_info.xlsx")
-creer_calendrier_global <- function(fichier_info) {
-  calendriers <- openxlsx2::read_xlsx(fichier_info) |>
-    dplyr::select(suivi = intitule, mois) |>
-    dplyr::filter(!is.na(suivi))
-
-  periodes <- calendriers |>
-    dplyr::group_by(suivi) |>
-    dplyr::group_split() |>
-    purrr::map(function(calendrier) {
-      if (!is.na(calendrier$mois)) {
-        resultat <- formater_mois(calendrier$mois)
-        resultat |>
-          dplyr::mutate(suivi = calendrier$suivi)
-      }
+creer_calendrier_global <- function(metadata) {
+  periodes <- charger_suivis(metadata)$suivi |>
+    purrr::map(function(suivi) {
+      infos <- charger_informations(metadata, suivi, 11)
+      infos$mois |>
+        dplyr::mutate(suivi = suivi, intitule = infos$intitule)
     }) |>
     purrr::list_rbind()
 
-
   periodes |>
-    dplyr::filter(mois_lettre == "") |>
-    dplyr::mutate(mois = as.numeric(as.character(mois))) |>
+    #dplyr::filter(mois_lettre == "") |>
+    dplyr::mutate(
+      mois = as.numeric(as.character(mois)),
+      action = stringr::str_replace_na(action, "")
+      ) |>
     ggplot2::ggplot() +
     ggplot2::geom_tile(
       mapping = ggplot2::aes(x = mois, y = action, alpha = action_realisee),
-      height = .75, fill = "#003A76"
+      height = .5, fill = "#003A76"
     ) +
-    ggplot2::geom_text(
-      mapping = ggplot2::aes(x = mois, label = mois_lettre, y = action)
-    ) +
+    #ggplot2::geom_text(
+    #  mapping = ggplot2::aes(x = mois, label = mois_lettre, y = action)
+    #) +
     ggplot2::theme_minimal() +
     ggplot2::theme(
       axis.text.y.left = ggplot2::element_blank(),
@@ -64,7 +58,7 @@ creer_calendrier_global <- function(fichier_info) {
     ggplot2::scale_y_discrete(position = "right") +
     ggplot2::scale_alpha_manual(values = c(`TRUE` = 1, `FALSE` = 0)) +
     ggplot2::facet_wrap(
-      ggplot2::vars(suivi), scales = "free_y", ncol = 1,
+      ggplot2::vars(intitule), scales = "free_y", ncol = 1,
     )
 
 }

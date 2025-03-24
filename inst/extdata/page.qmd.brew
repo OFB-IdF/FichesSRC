@@ -104,15 +104,17 @@ FichesSRC::creer_carte(
 ## Temporalité
 <%= FichesSRC::formater_web(infos$temporalite) %>
 
-<%=
-paste0(
-"
 ```{r, fig.height=2, fig.width=9, echo=FALSE}
-FichesSRC::creer_calendrier('", infos$mois, "', web = TRUE)
+FichesSRC::creer_calendrier(
+  data.frame(
+    mois = <%=paste0("c(", paste(infos$mois$mois, collapse = ", "), ")")%>,
+    mois_lettre = <%=paste0("c('", paste(infos$mois$mois_lettre, collapse = "', '"), "')")%>,
+    action = <%=paste0("c('", paste(infos$mois$action, collapse = "', '"), "')")%>,
+    action_realisee = <%=paste0("c('", paste(infos$mois$action_realisee, collapse = "', '"), "')")%>,
+    semestre = <%=paste0("c('", paste(infos$mois$semestre, collapse = "', '"), "')")%>
+  ),
+  web = TRUE)
 ```
-"
-)
-%>
 
 # Logistique
 
@@ -192,7 +194,7 @@ FichesSRC::creer_graphe_expertise('", infos$expertise, "')
 :::
 ::::::::::::::
 
-<%= 
+<%=
 if (!is.na(infos$autres_releves)) {
 paste0(
   '## Autres relevés  \n',

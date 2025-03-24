@@ -2,13 +2,26 @@
 #'
 #' This function creates a calendar-like visualization showing when monitoring activities
 #' take place throughout the year. It processes month data and creates a ggplot2 visualization
-#' with months on the x-axis and activities on the y-axis.
+#' with months on the x-axis and activities on the y-axis. The visualization highlights
+#' which months each activity is performed in, making it easy to see the temporal
+#' distribution of monitoring activities.
 #'
-#' @param info_mois A data frame containing month headers and activity markers in a specific format
-#' @param web Logical. If TRUE, creates a single calendar visualization; if FALSE, splits the calendar
-#'   into two semesters using facet_wrap
+#' @param info_mois A data frame containing month headers and activity markers in a specific format.
+#'   This data frame should have the following columns:
+#'   \itemize{
+#'     \item mois: Numeric month number (1-12)
+#'     \item mois_lettre: Character month name or abbreviation
+#'     \item action: Character name of the monitoring activity
+#'     \item action_realisee: Logical indicating if the action is performed in that month
+#'     \item semestre: Character indicating which semester ("premier" or "second")
+#'   }
+#'   This format is typically produced by the \code{formater_mois} function.
+#' @param web Logical. If TRUE, creates a single calendar visualization suitable for web display;
+#'   if FALSE, splits the calendar into two semesters using facet_wrap, which is better for
+#'   print documents
 #'
-#' @return A ggplot2 object representing the calendar visualization
+#' @return A ggplot2 object representing the calendar visualization, ready to be displayed
+#'   in R Markdown documents, Shiny applications, or Quarto documents
 #'
 #' @export
 #'
@@ -20,12 +33,21 @@
 #'
 #' @examples
 #' # Create a calendar visualization for web display
-#' # Assuming info_mois contains properly formatted month data
-#' creer_calendrier(info_mois, web = TRUE)
+#' # info_mois <- data.frame(
+#' #   mois = 1:12,
+#' #   mois_lettre = c("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+#' #                  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),
+#' #   action = rep(c("Field sampling", "Lab analysis", "Reporting"), each = 4),
+#' #   action_realisee = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, TRUE, TRUE,
+#' #                       FALSE, TRUE, TRUE, FALSE),
+#' #   semestre = rep(c(rep("premier", 6), rep("second", 6)), 2)
+#' # )
+#' # creer_calendrier(info_mois, web = TRUE)
 creer_calendrier <- function(info_mois, web = FALSE) {
-  periodes <- formater_mois(info_mois)
-
-  calendrier <- periodes |>
+  calendrier <- info_mois |>
+    dplyr::mutate(
+      action = stringr::str_replace_na(action, ""),
+    ) |>
     ggplot2::ggplot() +
     ggplot2::geom_tile(
       mapping = ggplot2::aes(x = mois, y = action, fill = action_realisee),
