@@ -21,7 +21,7 @@
 #'
 #' @importFrom dplyr filter %>%
 charger_informations <- function(metadata, suivi_fiche, region) {
-  infos <- googlesheets4::read_sheet(metadata, sheet = suivi_fiche, col_names = FALSE)
+  infos <- googlesheets4::read_sheet(metadata, sheet = suivi_fiche, col_names = FALSE, col_types = "c")
   colnames(infos) <- LETTERS[seq_len(ncol(infos))]
   list(
     intitule = infos$C[1],
