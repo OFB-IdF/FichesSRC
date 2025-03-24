@@ -104,15 +104,17 @@ FichesSRC::creer_carte(
 ## Temporalité
 <%= FichesSRC::formater_web(infos$temporalite) %>
 
-<%=
-paste0(
-"
 ```{r, fig.height=2, fig.width=9, echo=FALSE}
-FichesSRC::creer_calendrier('", infos$mois, "', web = TRUE)
+FichesSRC::creer_calendrier(
+  data.frame(
+    mois = <%=paste0("c(", paste(infos$mois$mois, collapse = ", "), ")")%>,
+    mois_lettre = <%=paste0("c('", paste(infos$mois$mois_lettre, collapse = "', '"), "')")%>,
+    action = <%=paste0("c('", paste(infos$mois$action, collapse = "', '"), "')")%>,
+    action_realisee = <%=paste0("c('", paste(infos$mois$action_realisee, collapse = "', '"), "')")%>,
+    semestre = <%=paste0("c('", paste(infos$mois$semestre, collapse = "', '"), "')")%>
+  ),
+  web = TRUE)
 ```
-"
-)
-%>
 
 # Logistique
 
@@ -192,7 +194,7 @@ FichesSRC::creer_graphe_expertise('", infos$expertise, "')
 :::
 ::::::::::::::
 
-<%= 
+<%=
 if (!is.na(infos$autres_releves)) {
 paste0(
   '## Autres relevés  \n',
@@ -222,10 +224,10 @@ paste0(
 
 <div class="card">
   <b>En savoir plus</b><br>
-  <%= ifelse(is.na(infos$plus_recto1), "", paste0(FichesSRC::formater_web(infos$plus_recto1), "<br>")) %>
-  <%= ifelse(is.na(infos$plus_recto2), "", paste0(FichesSRC::formater_web(infos$plus_recto2), "<br>")) %>
-  <%= ifelse(is.na(infos$plus_recto3), "", paste0(FichesSRC::formater_web(infos$plus_recto3), "<br>")) %>
-  <%= ifelse(is.na(infos$plus_verso1), "", paste0(FichesSRC::formater_web(infos$plus_verso1), "<br>")) %>
-  <%= ifelse(is.na(infos$plus_verso2), "", paste0(FichesSRC::formater_web(infos$plus_verso2), "<br>")) %>
-  <%= ifelse(is.na(infos$plus_verso3), "", paste0(FichesSRC::formater_web(infos$plus_verso3), "<br>")) %>
+  <%= ifelse(all(is.na(infos$plus_recto1)), "", paste0(FichesSRC::formater_liens(infos$plus_recto1, "web"), "<br>")) %>
+  <%= ifelse(all(is.na(infos$plus_recto2)), "", paste0(FichesSRC::formater_liens(infos$plus_recto2, "web"), "<br>")) %>
+  <%= ifelse(all(is.na(infos$plus_recto3)), "", paste0(FichesSRC::formater_liens(infos$plus_recto3, "web"), "<br>")) %>
+  <%= ifelse(all(is.na(infos$plus_verso1)), "", paste0(FichesSRC::formater_liens(infos$plus_verso1, "web"), "<br>")) %>
+  <%= ifelse(all(is.na(infos$plus_verso2)), "", paste0(FichesSRC::formater_liens(infos$plus_verso2, "web"), "<br>")) %>
+  <%= ifelse(all(is.na(infos$plus_verso3)), "", paste0(FichesSRC::formater_liens(infos$plus_verso3, "web"), "<br>")) %>
 </div>

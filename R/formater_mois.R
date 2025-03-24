@@ -1,88 +1,69 @@
-#' Format Month Information for Calendar Display
+#' Format Month Data from a Calendar-like Structure
 #'
-#' This function processes month-based information and formats it for calendar display.
-#' It takes a string containing month information in a specific format and converts it
-#' into a structured format suitable for calendar visualization.
+#' This function processes a data frame containing month headers and activity markers
+#' from a calendar-like structure and formats it into a structured data frame for use
+#' in calendar visualizations.
 #'
-#' @param info_mois A character string containing month information in the format
-#'                  "action:months" where months are comma-separated numbers (1-12).
-#'                  Multiple entries can be separated by newlines.
+#' @param mois_data A data frame containing month headers and activity markers in columns B-H
+#'   and rows 1-8, with month names in rows 1 and 5, and activity markers in rows 2-4 and 6-8
 #'
-#' @return A data frame containing formatted month information with columns for
-#'         months and corresponding actions. The data is structured for easy
-#'         integration with calendar visualization functions.
+#' @return A data frame with columns for month number (mois), month name (mois_lettre),
+#'   action name (action), whether the action is performed in that month (action_realisee),
+#'   and semester (semestre)
+#' @export
 #'
 #' @examples
-#' # Format simple month information
-#' formater_mois("Action 1:1,2,3\nAction 2:6,7,8")
-#'
-#' # Format month information with empty action
-#' formater_mois(":1,2,3")
-#'
-#' @export
-formater_mois <- function(info_mois) {
-  if (!is.na(info_mois)) {
-    if (!stringr::str_detect(string = info_mois, pattern = ":"))
-      info_mois <- paste0(" :", info_mois)
+#' # Example with a properly formatted mois_data data frame
+#' # mois_data <- data.frame(
+#' #   B = c("Mois", "Action 1", "Action 2", "Action 3", "", "", "", ""),
+#' #   C = c("Jan", "X", "", "", "Jul", "X", "", ""),
+#' #   D = c("Feb", "", "X", "", "Aug", "", "X", ""),
+#' #   E = c("Mar", "", "", "X", "Sep", "", "", "X"),
+#' #   F = c("Apr", "X", "", "", "Oct", "X", "", ""),
+#' #   G = c("May", "", "X", "", "Nov", "", "X", ""),
+#' #   H = c("Jun", "", "", "X", "Dec", "", "", "X")
+#' # )
+#' # formater_mois(mois_data)
+formater_mois <- function(mois_data) {
+  # Extract actions from column B if they exist
+  actions <- mois_data$B[2:4]
+  realisation_action_1 <- c(
+    as.character(mois_data[2, c("C", "D", "E", "F", "G", "H")]),
+    as.character(mois_data[6, c("C", "D", "E", "F", "G", "H")])
+  )
+  realisation_action_2 <- c(
+    as.character(mois_data[3, c("C", "D", "E", "F", "G", "H")]),
+    as.character(mois_data[7, c("C", "D", "E", "F", "G", "H")])
+  )
+  realisation_action_3 <- c(
+    as.character(mois_data[4, c("C", "D", "E", "F", "G", "H")]),
+    as.character(mois_data[8, c("C", "D", "E", "F", "G", "H")])
+  )
+  # Extract month headers from first and fifth rows
+  month_headers <- c(
+    as.character(mois_data[1, c("C", "D", "E", "F", "G", "H")]),
+    as.character(mois_data[5, c("C", "D", "E", "F", "G", "H")])
+  )
 
-    actions <- info_mois %>%
-      stringr::str_split(pattern = "\n") %>%
-      unlist() %>%
-      stringr::str_extract(pattern = "^.*:") %>%
-      stringr::str_remove_all(pattern = ":")
-
-    periodes <- info_mois %>%
-      stringr::str_split(pattern = "\n") %>%
-      unlist() %>%
-      stringr::str_split(pattern = ":") %>%
-      purrr::map(
-        function(x) {
-          data.frame(
-            mois = unlist(stringr::str_split(x[2], pattern = stringr::fixed(","))),
-            action = x[1]
-          )
-        }
-      ) %>%
-      purrr::list_rbind() %>%
-      dplyr::mutate(
-        mois = as.character(as.numeric(mois))
-      ) %>%
-      (function(df) {
-        if (!any(is.na(df$action))) {
-          df %>%
-            dplyr::bind_rows(
-              dplyr::tibble(
-                mois = "1", action = NA
-              )
-            )
-        } else {
-          df
-        }
-      }) %>%
-      dplyr::full_join(
-        dplyr::tibble(
-          mois = as.character(seq(12)),
-          mois_lettre = c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D")
-        ),
-        by = "mois"
-      ) %>%
-      dplyr::mutate(
-        action_realisee = TRUE,
-        mois = factor(mois, levels = as.character(seq(12)))
-      ) %>%
-      tidyr::complete(
-        tidyr::nesting(mois, mois_lettre), action,
-        fill = list(action_realisee = FALSE)
-      ) %>%
-      dplyr::mutate(
-        action_realisee = ifelse(is.na(action), FALSE, action_realisee),
-        semestre = ifelse(as.numeric(mois) <= 6, "premier", "second"),
-        mois_lettre = ifelse(is.na(action), mois_lettre, "")
-      ) %>%
-      dplyr::mutate(action = stringr::str_replace_na(action, "") %>%
-                      factor(levels = c(actions, "")))
-
-    list(actions = actions, periodes = periodes)
-  }
-
+  data.frame(
+    mois = seq_along(month_headers),
+    mois_lettre = month_headers,
+    action_realisee_1 = !is.na(realisation_action_1),
+    action_realisee_2 = !is.na(realisation_action_2),
+    action_realisee_3 = !is.na(realisation_action_3)
+  ) |>
+    tidyr::pivot_longer(
+      cols = dplyr::starts_with("action_realisee"),
+      names_to = "action",
+      values_to = "action_realisee"
+    ) |>
+    dplyr::group_by(action) |>
+    dplyr::mutate(nb_realisation = sum(action_realisee)) |>
+    dplyr::ungroup() |>
+    dplyr::filter(nb_realisation > 0) |>
+    dplyr::mutate(
+      action = actions[as.integer(stringr::str_remove(action, "action_realisee_"))],
+      semestre = ifelse(mois <= 6, "premier", "second")
+    ) |>
+    dplyr::select(-nb_realisation)
 }

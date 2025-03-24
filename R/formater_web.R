@@ -30,24 +30,24 @@ formater_web <- function(x) {
 
   convertir_en_lien <- function(chaine) {
 
-      # Extraire le texte et le lien
-      texte <- stringr::str_extract(chaine, "(?<=texte:)(.*)(?=;\\s*lien)")
-      lien <- stringr::str_extract(chaine, "(?<=lien:)(.*)")
+    # Extraire le texte et le lien
+    texte <- stringr::str_extract(chaine, "(?<=texte:)(.*)(?=;\\s*lien)")
+    lien <- stringr::str_extract(chaine, "(?<=lien:)(.*)")
 
-      # Créer le format de lien
-      lien <- stringr::str_replace_all(
-        string = lien,
-        pattern = expression_liens,
-        replacement = function(match) {
-          if (stringr::str_starts(match, "www")) {
-            paste0("http://", match)
-          } else {
-            match
-          }
+    # Créer le format de lien
+    lien <- stringr::str_replace_all(
+      string = lien,
+      pattern = expression_liens,
+      replacement = function(match) {
+        if (stringr::str_starts(match, "www")) {
+          paste0("http://", match)
+        } else {
+          match
         }
-      )
+      }
+    )
 
-      paste0('<a href="', lien, '">', texte, '</a>')
+    paste0('<a href="', lien, '">', texte, '</a>')
 
   }
 
@@ -56,9 +56,9 @@ formater_web <- function(x) {
     if (stringr::str_detect(string = x, pattern = "(?<=texte:)(.*)(?=;\\s*lien)")) {
       convertir_en_lien(x)
     } else {
-      x %>%
-        stringr::str_replace_all(pattern = "\n", replacement = "<br>") %>%
-        stringr::str_replace_all(pattern = "^-", replacement = "<br>-") %>%
+      x |>
+        stringr::str_replace_all(pattern = "\n", replacement = "<br>") |>
+        stringr::str_replace_all(pattern = "^-", replacement = "<br>-") |>
         stringr::str_replace_all(
           pattern = expression_liens,
           replacement = function(match) {
@@ -68,11 +68,11 @@ formater_web <- function(x) {
               paste0("<a href='", match, "'>", match, "</a>")
             }
           }
-        ) %>%
+        ) |>
         stringr::str_replace_all(
           pattern = expression_mail,
           replacement = "<a href='mailto:\\1'>\\1</a>"
-        ) %>%
+        ) |>
         stringr::str_replace_all(
           pattern = expression_gras,
           replacement = "<b>\\0</b>"
