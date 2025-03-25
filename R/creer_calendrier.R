@@ -44,25 +44,29 @@
 #' # )
 #' # creer_calendrier(info_mois, web = TRUE)
 creer_calendrier <- function(info_mois, web = FALSE) {
-  calendrier <- info_mois |>
+
+  calendrier <- info_mois|>
     dplyr::mutate(
-      action = stringr::str_replace_na(action, ""),
+      action = stringr::str_replace_na(action, "")
     ) |>
     ggplot2::ggplot() +
     ggplot2::geom_tile(
       mapping = ggplot2::aes(x = mois, y = action, fill = action_realisee),
       height = .75
     ) +
-    ggplot2::geom_text(
-      mapping = ggplot2::aes(x = mois, label = mois_lettre, y = action)
-    ) +
     ggplot2::theme_minimal() +
     ggplot2::theme(
-      axis.text.x = ggplot2::element_blank(),
+      axis.text.x.bottom = ggplot2::element_blank(),
+      axis.text.x.top = ggplot2::element_text(),
       axis.text.y = ggplot2::element_text(hjust = 0, face = "bold"),
       strip.text = ggplot2::element_blank(),
       panel.grid = ggplot2::element_blank(),
       legend.position = "none"
+    ) +
+    ggplot2::scale_x_continuous(
+      breaks = info_mois$mois,
+      labels = info_mois$mois_lettre,
+      sec.axis = ggplot2::dup_axis()
     ) +
     ggplot2::labs(x = "", y = "") +
     ggplot2::scale_fill_manual(values = c(`TRUE` = "darkgrey", `FALSE` = "white"))
