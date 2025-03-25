@@ -62,7 +62,8 @@ charger_informations <- function(metadata, suivi_fiche, region) {
     plus_recto3 = list(text = infos$C[49], link = infos$G[49]),
     plus_verso1 = list(text = infos$M[47], link = infos$P[47]),
     plus_verso2 = list(text = infos$M[48], link = infos$P[48]),
-    plus_verso3 = list(text = infos$M[49], link = infos$P[49])
+    plus_verso3 = list(text = infos$M[49], link = infos$P[49]),
+    date_edition = infos$A[49]
   )
 }
 

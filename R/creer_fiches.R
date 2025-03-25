@@ -31,6 +31,13 @@
 creer_toutes_fiches <- function(metadata, dossier_fiches, region = NULL) {
   suivis <- charger_suivis(metadata)
 
+  googledrive::drive_download(googledrive::as_id(metadata), path = "modele_fiche.xlsx", overwrite = TRUE)
+  wb <- openxlsx2::wb_load("modele_fiche.xlsx")
+  for (sheet_name in names(openxlsx2::wb_get_sheet_names(wb))[openxlsx2::wb_get_sheet_names(wb) != "modele_impression"]) {
+        wb <- openxlsx2::wb_remove_worksheet(wb, sheet = sheet_name)
+    }
+  openxlsx2::wb_save(wb,file = "modele_fiche.xlsx", overwrite = TRUE)
+
   for (x in suivis$suivi) {
     creer_fiches(
       infos = charger_informations(metadata, suivi = x, region = region),
@@ -165,17 +172,14 @@ creer_fiche_web <- function(infos, chemin_fiche, region = NULL) {
 #' }
 creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
   fiche <- openxlsx2::wb_load(
-    file = system.file(
-      "extdata", "fiche.xlsx",
-      package = "FichesSRC"
-    ),
+    file = "modele_fiche.xlsx",
     sheet = 1
   )
 
   remplir_cellule(
     classeur = fiche,
     cellule = "A49",
-    valeur = paste0("Editée le ", Sys.Date())
+    valeur = ifelse(infos$date_edition == "date d'édition", paste0("Editée le ", Sys.Date()), paste0("Editée le ", infos$date_edition))
   )
 
   remplir_cellule(
@@ -186,13 +190,13 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "L1",
+    cellule = "M1",
     valeur = infos$intitule
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "G6",
+    cellule = "I6",
     valeur = infos$logo,
     largeur = 4.5,
     hauteur = 3.8
@@ -218,7 +222,7 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "B22",
+    cellule = "B23",
     valeur = creer_carte(
       departements = infos$departements,
       region = region,
@@ -230,13 +234,13 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "E22",
+    cellule = "F24",
     valeur = infos$forme_suivi
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "B38",
+    cellule = "B37",
     valeur = creer_calendrier(infos$mois, web = FALSE),
     largeur = 11,
     hauteur = 3
@@ -244,19 +248,19 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "B43",
+    cellule = "B45",
     valeur = infos$temporalite
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "G13",
+    cellule = "I13",
     valeur = infos$animation
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "G31",
+    cellule = "I31",
     valeur = infos$partenaires
   )
 
@@ -280,19 +284,19 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "L6",
+    cellule = "M6",
     valeur = infos$duree
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "M6",
+    cellule = "N6",
     valeur = infos$nombre_agents
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "O6",
+    cellule = "P6",
     valeur = creer_graphe_expertise(niveau = infos$expertise),
     largeur = 5.8,
     hauteur = 1.6
@@ -300,43 +304,43 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "K11",
+    cellule = "L11",
     valeur = infos$role_national
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "L11",
+    cellule = "M11",
     valeur = infos$role_regional
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "M11",
+    cellule = "N11",
     valeur = infos$role_departemental
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "O9",
+    cellule = "P9",
     valeur = infos$droits_formations
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "K16",
+    cellule = "L16",
     valeur = infos$protocole
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "O16",
+    cellule = "P16",
     valeur = infos$materiel
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "L29",
+    cellule = "M29",
     valeur = infos$saisie_validation
   )
 
@@ -345,7 +349,7 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
     function(row_id) {
       remplir_cellule(
         classeur = fiche,
-        cellule = paste0("O", row_id),
+        cellule = paste0("P", row_id),
         valeur = formater_liens(infos$diffusion[[as.character(row_id)]], target = "excel")
       )
     }
@@ -353,25 +357,25 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "K29",
+    cellule = "L44",
     valeur = infos$autres_releves
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "L47",
+    cellule = "M47",
     valeur = formater_liens(infos$plus_verso1, target = "excel")
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "L48",
+    cellule = "M48",
     valeur = formater_liens(infos$plus_verso2, target = "excel")
   )
 
   remplir_cellule(
     classeur = fiche,
-    cellule = "L49",
+    cellule = "M49",
     valeur = formater_liens(infos$plus_verso3, target = "excel")
   )
 
