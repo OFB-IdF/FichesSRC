@@ -26,7 +26,7 @@
 #' # Create an interactive web map
 #' creer_carte(departements = "75, 77, 78", region = "11", web = TRUE)
 creer_carte <- function(departements, region = NULL, stations = NULL, web = FALSE) {
-  if (all(!is.null(stations), !is.na(stations))) {
+  if (all(!is.null(stations), !is.na(stations), length(stations) > 0)) {
     stations_sf <- sf::st_read(stations, quiet = TRUE)
   }
 
@@ -36,7 +36,7 @@ creer_carte <- function(departements, region = NULL, stations = NULL, web = FALS
 
   donnees_carte <- limites_departements |>
     sf::st_as_sf()
-    
+
   # Appliquer le filtre de région si nécessaire
   if (!is.null(region)) {
     donnees_carte <- donnees_carte |>
@@ -59,7 +59,7 @@ creer_carte <- function(departements, region = NULL, stations = NULL, web = FALS
         fillOpacity = .25
       )
 
-    if (all(!is.null(stations), !is.na(stations))) {
+    if (all(!is.null(stations), !is.na(stations), length(stations) > 0)) {
       if (unique(sf::st_geometry_type(stations_sf)) == "POINT")
         carte <- carte |>
           leaflet::addCircleMarkers(
@@ -82,7 +82,7 @@ creer_carte <- function(departements, region = NULL, stations = NULL, web = FALS
       ggplot2::theme_void() +
       ggplot2::theme(legend.position = "none")
 
-    if (all(!is.null(stations), !is.na(stations))) {
+    if (all(!is.null(stations), !is.na(stations), length(stations) > 0)) {
       carte <- carte +
         ggplot2::geom_sf(data = stations_sf)
     }
