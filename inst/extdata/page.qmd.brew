@@ -58,7 +58,7 @@ include-in-header:
 :::::::::::::: {.columns}
 ::: {.column width="67%"}
 <%=
-if (!is.na(infos$fichier_stations)) {
+if (all(!is.null(infos$fichier_stations), !is.na(infos$fichier_stations), length(infos$fichier_stations) > 0)) {
 paste0("
 ::: panel-tabset
 ### Carte
