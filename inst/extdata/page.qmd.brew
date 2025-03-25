@@ -104,7 +104,7 @@ FichesSRC::creer_carte(
 ## Temporalité
 <%= FichesSRC::formater_web(infos$temporalite) %>
 
-```{r, fig.height=2, fig.width=9, echo=FALSE}
+```{r, fig.height=1, fig.width=6, echo=FALSE}
 FichesSRC::creer_calendrier(
   data.frame(
     mois = <%=paste0("c(", paste(infos$mois$mois, collapse = ", "), ")")%>,
