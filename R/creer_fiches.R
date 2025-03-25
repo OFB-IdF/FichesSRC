@@ -340,10 +340,15 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
     valeur = infos$saisie_validation
   )
 
-  remplir_cellule(
-    classeur = fiche,
-    cellule = "O29",
-    valeur = infos$diffusion
+  purrr::walk(
+    29:42,
+    function(row_id) {
+      remplir_cellule(
+        classeur = fiche,
+        cellule = paste0("O", row_id),
+        valeur = formater_liens(infos$diffusion[[as.character(row_id)]], target = "excel")
+      )
+    }
   )
 
   remplir_cellule(
@@ -351,31 +356,6 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
     cellule = "K29",
     valeur = infos$autres_releves
   )
-
-  # if (!is.na(infos$autres_releves)) {
-  #   remplir_cellule(
-  #     classeur = fiche,
-  #     cellule = "K43",
-  #     valeur = paste0("Autres relevés: ", infos$autres_releves)
-  #   )
-
-  #   if (!is.na(infos$transversalite)) {
-  #     remplir_cellule(
-  #       classeur = fiche,
-  #       cellule = "K45",
-  #       valeur = paste0("Transversalité: ", infos$transversalite)
-  #     )
-  #   }
-  # } else {
-  #   if (!is.na(infos$transversalite)) {
-  #     remplir_cellule(
-  #       classeur = fiche,
-  #       cellule = "K43",
-  #       valeur = paste0("Transversalité: ", infos$transversalite)
-  #     )
-  #   }
-  #
-  # }
 
   remplir_cellule(
     classeur = fiche,
