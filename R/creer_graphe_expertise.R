@@ -16,7 +16,7 @@
 #' # Create an expertise graph requiring "Formé" and "Maitrise" levels
 #' creer_graphe_expertise(c("Formé", "Maitrise"))
 creer_graphe_expertise <- function(niveau_requis) {
-  niveaux <- c("Novice", "Initié", "Formé", "Maitrise", "Expert")
+  niveaux <- c("novice", "initié", "formé", "maitrise", "expert")
 
   ggplot2::ggplot(mapping = ggplot2::aes(x = niveau)) +
     ggplot2::geom_tile(
