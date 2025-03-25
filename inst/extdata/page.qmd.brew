@@ -219,7 +219,7 @@ paste0(
 ::: {.column width="35%"}
 ### Diffusion
 
-<%= FichesSRC::formater_web(infos$diffusion) %>
+<%= FichesSRC::formater_liens(infos$diffusion) %>
 :::
 ::::::::::::::
 
