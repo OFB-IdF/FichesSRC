@@ -26,13 +26,16 @@ formater_liens <- function(infos_lien, target) {
   if (!target %in% c("web", "excel"))
     stop("La valeur de target doit être 'web' ou 'excel'.")
 
-  if (is.na(infos_lien$link))
-    return(infos_lien$text)
+  if (!is.null(infos_lien)) {
+    if (is.na(infos_lien$link))
+      return(infos_lien$text)
 
-  if (target == "web") {
-    paste0("<a href='", infos_lien$link, "' target='_blank'>", infos_lien$text, "</a>")
-  } else {
-    if (target == "excel")
-      openxlsx2::create_hyperlink(text = infos_lien$text, file = infos_lien$link)
+    if (target == "web") {
+      paste0("<a href='", infos_lien$link, "' target='_blank'>", infos_lien$text, "</a>")
+    } else {
+      if (target == "excel")
+        openxlsx2::create_hyperlink(text = infos_lien$text, file = infos_lien$link)
+    }
   }
+
 }

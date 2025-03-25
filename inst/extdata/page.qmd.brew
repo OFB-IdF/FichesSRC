@@ -219,7 +219,9 @@ paste0(
 ::: {.column width="35%"}
 ### Diffusion
 
-<%= FichesSRC::formater_liens(infos$diffusion, target = "web") %>
+<%= purrr::map(infos$diffusion, FichesSRC::formater_liens, target = "web") |>
+  purrr::list_c() |>
+  paste(collapse = "<br>") %>
 :::
 ::::::::::::::
 

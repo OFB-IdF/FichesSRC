@@ -49,15 +49,14 @@ charger_informations <- function(metadata, suivi_fiche, region) {
     materiel = infos$P[16],
     autres_releves = infos$M[43],
     saisie_validation = infos$M[29],
-    diffusion = paste(
-      na.omit(c(
-        infos$P[29],
-        infos$P[32],
-        infos$P[35],
-        infos$P[37]
-      )),
-      collapse = "\n"
-    ), #PROBLEME: ne récupère pas les liens, seulement le texte
+    diffusion = lapply(
+      29:42,
+      function(row_id) {
+        if (all(!is.na(infos$P[row_id]), !is.na(infos$S[row_id])))
+          list(text = infos$P[row_id], link = infos$S[row_id])
+      }
+    ) |>
+      purrr::set_names(29:42),
     plus_recto1 = list(text = infos$C[47], link = infos$G[47]),
     plus_recto2 = list(text = infos$C[48], link = infos$G[48]),
     plus_recto3 = list(text = infos$C[49], link = infos$G[49]),
