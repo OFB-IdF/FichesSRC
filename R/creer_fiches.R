@@ -31,8 +31,7 @@
 creer_toutes_fiches <- function(metadata, dossier_fiches, region = NULL) {
   suivis <- charger_suivis(metadata)
 
-  googledrive::drive_download(googledrive::as_id(metadata), path = "modele_fiche.xlsx", overwrite = TRUE)
-  wb <- openxlsx2::wb_load("modele_fiche.xlsx")
+  wb <- openxlsx2::wb_load(system.file("extdata/fiches.xlsx", package = "FichesSRC"))
   for (sheet_name in names(openxlsx2::wb_get_sheet_names(wb))[openxlsx2::wb_get_sheet_names(wb) != "modele_impression"]) {
         wb <- openxlsx2::wb_remove_worksheet(wb, sheet = sheet_name)
     }
