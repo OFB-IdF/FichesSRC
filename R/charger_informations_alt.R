@@ -20,6 +20,39 @@
 #' @export
 #'
 #' @importFrom dplyr filter %>%
+#' @importFrom googlesheets4 read_sheet
+#' @importFrom purrr set_names
+#'
+#' @examples
+#' \dontrun{
+#' # Load information for a specific monitoring sheet
+#' infos <- charger_informations(
+#'   metadata = "https://docs.google.com/spreadsheets/d/your_sheet_id",
+#'   suivi_fiche = "monitoring_name",
+#'   region = "11"
+#' )
+#' }
+#'
+#' This function processes data from a Google Sheet containing monitoring information
+#' and formats it into a structured list for use in creating monitoring sheets.
+#'
+#' @param metadata Link or ID of a Google Sheet document
+#' @param suivi_fiche The name of the monitoring sheet being processed
+#' @param region Optional. The region code to be used in the output
+#'
+#' @return A list containing formatted monitoring information including:
+#'   \itemize{
+#'     \item intitule: The title of the monitoring
+#'     \item description: Detailed description of the monitoring
+#'     \item objectif: Objectives of the monitoring
+#'     \item temporalite: Temporal aspects of the monitoring
+#'     \item role_national, role_regional, role_departemental: Roles at different levels
+#'     \item And various other monitoring metadata
+#'   }
+#'
+#' @export
+#'
+#' @importFrom dplyr filter %>%
 charger_informations <- function(metadata, suivi_fiche, region) {
   infos <- googlesheets4::read_sheet(metadata, sheet = suivi_fiche, col_names = FALSE, col_types = "c")
   colnames(infos) <- LETTERS[seq_len(ncol(infos))]
@@ -89,15 +122,19 @@ charger_suivis <- function(metadata) {
 #'
 #' This function searches for and downloads a logo file associated with a specific monitoring
 #' sheet from Google Drive. It looks for files with the pattern "logo_[suivi]".
+#' If the directory specified by `dossier` doesn't exist, it will be created.
 #'
 #' @param suivi The name of the monitoring sheet for which to retrieve the logo
 #' @param dossier Optional. The directory where the logo file should be downloaded.
 #'   Defaults to the current working directory
 #'
-#' @return The file path to the downloaded logo file
+#' @return The file path to the downloaded logo file. If no logo file is found,
+#'   returns the path where the file would have been downloaded.
 #'
 #' @importFrom googledrive drive_find drive_download
 #' @importFrom dplyr pull
+#'
+#' @keywords internal
 recuperer_logo <- function(suivi, dossier = getwd()) {
   fichier <- googledrive::drive_find(pattern = paste0("logo_", suivi)) |>
     dplyr::pull(name)
@@ -115,15 +152,19 @@ recuperer_logo <- function(suivi, dossier = getwd()) {
 #'
 #' This function searches for and downloads a stations data file associated with a specific
 #' monitoring sheet from Google Drive. It looks for files with the pattern "stations_[suivi]".
+#' If the directory specified by `dossier` doesn't exist, it will be created.
 #'
 #' @param suivi The name of the monitoring sheet for which to retrieve the stations data
 #' @param dossier Optional. The directory where the stations file should be downloaded.
 #'   Defaults to the current working directory
 #'
-#' @return The file path to the downloaded stations data file
+#' @return The file path to the downloaded stations data file. If no stations file is found,
+#'   returns the path where the file would have been downloaded.
 #'
 #' @importFrom googledrive drive_find drive_download
 #' @importFrom dplyr pull
+#'
+#' @keywords internal
 recuperer_stations <- function(suivi, dossier = getwd()) {
   fichier <- googledrive::drive_find(pattern = paste0("stations_", suivi)) |>
     dplyr::pull(name)
