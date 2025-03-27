@@ -31,7 +31,7 @@
 creer_toutes_fiches <- function(metadata, dossier_fiches, region = NULL) {
   suivis <- charger_suivis(metadata)
 
-  creer_fiches_excel(suivis = suivis, path = file.path(dossier_fiches, "fiches_suivis.xlsx"))
+  creer_fiches_excel(suivis = suivis, chemin_fiches = file.path(dossier_fiches, "suivis_connaissance.xlsx"))
 
   for (x in suivis$suivi) {
     creer_fiches(

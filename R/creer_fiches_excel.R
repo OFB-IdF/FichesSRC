@@ -6,7 +6,7 @@
 #'
 #' @param suivis Un vecteur de caractères contenant les noms des onglets à conserver.
 #'   Si NULL, tous les onglets sont conservés.
-#' @param path Le chemin où sauvegarder le fichier Excel téléchargé. Par défaut "fiches_suivis.xlsx".
+#' @param chemin_fiches Le chemin où sauvegarder le fichier Excel téléchargé.
 #'
 #' @return Le chemin vers le fichier Excel téléchargé et filtré (invisible).
 #'
@@ -23,11 +23,11 @@
 #' # Télécharger tous les onglets
 #' creer_fiches_excel()
 #' }
-creer_fiches_excel <- function(suivis = NULL, path = "fiches_suivis.xlsx") {
+creer_fiches_excel <- function(suivis = NULL, chemin_fiches) {
   # Télécharger le fichier depuis Google Drive
-  googledrive::drive_download(file = "fiches", path = path, overwrite = TRUE)
+  googledrive::drive_download(file = "fiches", path = chemin_fiches, overwrite = TRUE)
   # Charger le fichier Excel
-  wb <- openxlsx2::wb_load(path)
+  wb <- openxlsx2::wb_load(chemin_fiches)
 
   if (!is.null(suivis)) {
   # Obtenir la liste des onglets
@@ -48,7 +48,7 @@ creer_fiches_excel <- function(suivis = NULL, path = "fiches_suivis.xlsx") {
     appliquer_hyperliens(wb, sheet_name, rows = 29:42, col_texte = "P", col_url = "S", fusion_debut = "P", fusion_fin = "T")
   }
   # Sauvegarder le fichier Excel
-  openxlsx2::wb_save(wb, file = path, overwrite = TRUE)
+  openxlsx2::wb_save(wb, file = chemin_fiches, overwrite = TRUE)
 }
 
 #' Appliquer des hyperliens à des plages de cellules dans un classeur Excel
