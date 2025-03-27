@@ -187,19 +187,13 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
     valeur = infos$intitule
   )
 
-  remplir_cellule(
-    classeur = fiche,
-    cellule = "M1",
-    valeur = infos$intitule
-  )
-
-  remplir_cellule(
-    classeur = fiche,
-    cellule = "I6",
-    valeur = infos$logo,
-    largeur = 4.5,
-    hauteur = 3.8
-  )
+  # remplir_cellule(
+  #   classeur = fiche,
+  #   cellule = "I6",
+  #   valeur = infos$logo,
+  #   largeur = 4.5,
+  #   hauteur = 3.8
+  # )
 
   remplir_cellule(
     classeur = fiche,
@@ -219,17 +213,17 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
     valeur = infos$utilisation
   )
 
-  remplir_cellule(
-    classeur = fiche,
-    cellule = "B23",
-    valeur = creer_carte(
-      departements = infos$departements,
-      region = region,
-      stations = infos$fichier_stations
-    ),
-    largeur = 6.8,
-    hauteur = 8
-  )
+  # remplir_cellule(
+  #   classeur = fiche,
+  #   cellule = "B23",
+  #   valeur = creer_carte(
+  #     departements = infos$departements,
+  #     region = region,
+  #     stations = infos$fichier_stations
+  #   ),
+  #   largeur = 6.8,
+  #   hauteur = 8
+  # )
 
   remplir_cellule(
     classeur = fiche,
@@ -237,13 +231,42 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
     valeur = infos$forme_suivi
   )
 
-  remplir_cellule(
-    classeur = fiche,
-    cellule = "B37",
-    valeur = creer_calendrier(infos$mois, web = FALSE),
-    largeur = 11,
-    hauteur = 3
-  )
+  infos_mois <- infos$mois |>
+    dplyr::mutate(
+      col = dplyr::case_when(
+        mois %in% c(1,7) ~ "C",
+        mois %in% c(2,8) ~ "D",
+        mois %in% c(3,9) ~ "E",
+        mois %in% c(4, 10) ~ "F",
+        mois %in% c(5, 11) ~ "G",
+        mois %in% c(6, 12) ~ "H"
+      ),
+      action = stringr::str_replace_na(action, "")
+    ) |>
+    dplyr::group_by(mois) |>
+    dplyr::mutate(
+      cellule = paste0(col, ifelse(mois <= 6, 37, 41) + seq(dplyr::n()))
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      li = stringr::str_remove(cellule, paste(LETTERS, collapse = "|"))
+    )
+
+  seq(nrow(infos_mois)) |>
+    purrr::walk(
+      function(i) {
+        remplir_cellule(
+          classeur = fiche,
+          cellule = paste0("B", infos_mois$li[i]),
+          valeur = infos_mois$action[i]
+        )
+        remplir_cellule(
+          classeur = fiche,
+          cellule = infos_mois$cellule[i],
+          valeur = ifelse(infos_mois$action_realisee[i], "X", "")
+        )
+      }
+    )
 
   remplir_cellule(
     classeur = fiche,
@@ -293,12 +316,18 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
     valeur = infos$nombre_agents
   )
 
+  cellules_expertise <- c(
+    novice = "P6",
+    initié = "Q6",
+    formé = "R6",
+    maitrise = "S6",
+    expert = "T6"
+  )
+
   remplir_cellule(
     classeur = fiche,
-    cellule = "P6",
-    valeur = creer_graphe_expertise(niveau = infos$expertise),
-    largeur = 5.8,
-    hauteur = 1.6
+    cellule = cellules_expertise[infos$expertise],
+    valeur = "X"
   )
 
   remplir_cellule(
