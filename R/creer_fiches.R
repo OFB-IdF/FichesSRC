@@ -187,19 +187,13 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
     valeur = infos$intitule
   )
 
-  remplir_cellule(
-    classeur = fiche,
-    cellule = "M1",
-    valeur = infos$intitule
-  )
-
-  remplir_cellule(
-    classeur = fiche,
-    cellule = "I6",
-    valeur = infos$logo,
-    largeur = 4.5,
-    hauteur = 3.8
-  )
+  # remplir_cellule(
+  #   classeur = fiche,
+  #   cellule = "I6",
+  #   valeur = infos$logo,
+  #   largeur = 4.5,
+  #   hauteur = 3.8
+  # )
 
   remplir_cellule(
     classeur = fiche,
@@ -219,17 +213,17 @@ creer_fiche_excel <- function(infos, chemin_fiche, region = NULL) {
     valeur = infos$utilisation
   )
 
-  remplir_cellule(
-    classeur = fiche,
-    cellule = "B23",
-    valeur = creer_carte(
-      departements = infos$departements,
-      region = region,
-      stations = infos$fichier_stations
-    ),
-    largeur = 6.8,
-    hauteur = 8
-  )
+  # remplir_cellule(
+  #   classeur = fiche,
+  #   cellule = "B23",
+  #   valeur = creer_carte(
+  #     departements = infos$departements,
+  #     region = region,
+  #     stations = infos$fichier_stations
+  #   ),
+  #   largeur = 6.8,
+  #   hauteur = 8
+  # )
 
   remplir_cellule(
     classeur = fiche,
