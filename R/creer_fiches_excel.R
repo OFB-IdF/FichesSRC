@@ -25,7 +25,7 @@
 #' }
 creer_fiches_excel <- function(suivis = NULL, chemin_fiches) {
   # Télécharger le fichier depuis Google Drive
-  googledrive::drive_download(file = "fiches", path = chemin_fiches, overwrite = TRUE)
+  googledrive::drive_download(file = "suivis_connaissance", path = chemin_fiches, overwrite = TRUE)
   # Charger le fichier Excel
   wb <- openxlsx2::wb_load(chemin_fiches)
 
