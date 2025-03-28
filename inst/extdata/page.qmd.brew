@@ -7,11 +7,7 @@ include-in-header:
 
 :::::::::::::: {.columns}
 ::: {.column width="70%"}
-<a href="<%= paste0(infos$suivi, ".xlsx") %>" class="btn btn-primary" download>
-  <i class="fas fa-file-arrow-down"></i> Télécharger la fiche
-</a>
-
-<small>Fiche éditée le <%= as.character(Sys.Date()) %></small>
+<small>Fiche éditée le <%= infos$date_edition %></small>
 
 :::
 ::: {.column width="5%"}

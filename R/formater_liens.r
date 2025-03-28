@@ -33,8 +33,20 @@ formater_liens <- function(infos_lien, target) {
     if (target == "web") {
       paste0("<a href='", infos_lien$link, "' target='_blank'>", infos_lien$text, "</a>")
     } else {
-      if (target == "excel")
-        openxlsx2::create_hyperlink(text = infos_lien$text, file = infos_lien$link)
+      if (target == "excel") {
+        # Nettoyer l'URL pour éviter les erreurs de formule Excel
+        url_clean <- gsub("#", "%23", infos_lien$link)  # Encoder les caractères # qui peuvent causer des problèmes
+        url_clean <- gsub("\\s", "%20", url_clean)  # Encoder les espaces
+        
+        # Créer l'hyperlien avec l'URL nettoyée
+        tryCatch({
+          openxlsx2::create_hyperlink(text = infos_lien$text, file = url_clean)
+        }, error = function(e) {
+          warning(paste("Impossible de créer un hyperlien pour", infos_lien$text, ":", e$message))
+          # Retourner simplement le texte en cas d'erreur
+          infos_lien$text
+        })
+      }
     }
   }
 

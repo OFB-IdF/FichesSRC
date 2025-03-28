@@ -1,33 +1,38 @@
-#' Télécharger et filtrer les onglets d'un fichier Excel depuis Google Drive
+#' Filtrer les onglets d'un fichier Excel et appliquer des hyperliens
 #'
-#' Cette fonction télécharge un fichier Excel depuis Google Drive et ne conserve
-#' que les onglets spécifiés dans le paramètre `suivis`. Elle applique également
-#' des hyperliens aux cellules appropriées dans chaque feuille du classeur.
+#' Cette fonction charge un fichier Excel et ne conserve que les onglets spécifiés 
+#' dans le paramètre `suivis`. Elle applique également des hyperliens aux cellules 
+#' appropriées dans chaque feuille du classeur.
 #'
 #' @param suivis Un vecteur de caractères contenant les noms des onglets à conserver.
 #'   Si NULL, tous les onglets sont conservés.
-#' @param chemin_fiches Le chemin où sauvegarder le fichier Excel téléchargé.
+#' @param fichier_xlsx Chemin vers le fichier Excel source contenant les informations de suivi.
+#' @param dossier Le répertoire où sauvegarder le fichier Excel filtré.
 #'
-#' @return Le chemin vers le fichier Excel téléchargé et filtré (invisible).
+#' @return Le nom du fichier Excel filtré.
 #'
-#' @importFrom googledrive drive_download
 #' @importFrom openxlsx2 wb_load wb_get_sheet_names wb_remove_worksheet wb_save
 #'
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' # Télécharger le fichier en ne conservant que certains onglets
-#' creer_fiches_excel(suivis = c("suivi1", "suivi2"))
+#' # Filtrer le fichier en ne conservant que certains onglets
+#' creer_fiches_excel(
+#'   suivis = c("suivi1", "suivi2"),
+#'   fichier_xlsx = "chemin/vers/suivis_connaissance.xlsx",
+#'   dossier = "./output/fiches"
+#' )
 #'
-#' # Télécharger tous les onglets
-#' creer_fiches_excel()
+#' # Conserver tous les onglets
+#' creer_fiches_excel(
+#'   fichier_xlsx = "chemin/vers/suivis_connaissance.xlsx",
+#'   dossier = "./output/fiches"
+#' )
 #' }
-creer_fiches_excel <- function(suivis = NULL, chemin_fiches) {
-  # Télécharger le fichier depuis Google Drive
-  googledrive::drive_download(file = "suivis_connaissance", path = chemin_fiches, overwrite = TRUE)
+creer_fiches_excel <- function(suivis = NULL, fichier_xlsx, dossier) {
   # Charger le fichier Excel
-  wb <- openxlsx2::wb_load(chemin_fiches)
+  wb <- openxlsx2::wb_load(fichier_xlsx)
 
   if (!is.null(suivis)) {
   # Obtenir la liste des onglets
@@ -47,8 +52,17 @@ creer_fiches_excel <- function(suivis = NULL, chemin_fiches) {
     appliquer_hyperliens(wb, sheet_name, rows = 47:49, col_texte = "M", col_url = "P", fusion_debut = "M", fusion_fin = "T")
     appliquer_hyperliens(wb, sheet_name, rows = 29:42, col_texte = "P", col_url = "S", fusion_debut = "P", fusion_fin = "T")
   }
+
+  excel_telechargeable <- stringr::str_replace(basename(fichier_xlsx), pattern = "_gs\\.xlsx", replacement = "\\.xlsx")
+
   # Sauvegarder le fichier Excel
-  openxlsx2::wb_save(wb, file = chemin_fiches, overwrite = TRUE)
+  openxlsx2::wb_save(
+    wb,
+    file = file.path(dossier, excel_telechargeable),
+    overwrite = TRUE
+    )
+
+  return(excel_telechargeable)
 }
 
 #' Appliquer des hyperliens à des plages de cellules dans un classeur Excel
@@ -76,12 +90,23 @@ appliquer_hyperliens <- function(wb, sheet_name, rows, col_texte, col_url, fusio
 
     # Créer un hyperlien avec le texte et l'URL
     if (!is.na(texte_lien) && !is.na(url_lien)) {
-      # Créer l'hyperlien
-      hyperlien <- openxlsx2::create_hyperlink(text = texte_lien, file = url_lien)
+      # Vérifier et nettoyer l'URL pour éviter les erreurs de formule Excel
+      # Remplacer les caractères spéciaux qui pourraient causer des problèmes dans les formules Excel
+      url_lien_clean <- gsub("#", "%23", url_lien)  # Encoder les caractères # qui peuvent causer des problèmes
+      url_lien_clean <- gsub("\\s", "%20", url_lien_clean)  # Encoder les espaces
 
-      # Appliquer l'hyperlien à la cellule
-      wb$add_formula(sheet = sheet_name, dims = paste0(col_texte, row_id), x = hyperlien)$
-        add_data(wb, sheet = sheet_name, dims = paste0(col_url, row_id), x = "")
+      # Créer l'hyperlien avec l'URL nettoyée
+      tryCatch({
+        hyperlien <- openxlsx2::create_hyperlink(text = texte_lien, file = url_lien_clean)
+
+        # Appliquer l'hyperlien à la cellule
+        wb$add_formula(sheet = sheet_name, dims = paste0(col_texte, row_id), x = hyperlien)$
+          add_data(wb, sheet = sheet_name, dims = paste0(col_url, row_id), x = "")
+      }, error = function(e) {
+        # En cas d'erreur, ajouter simplement le texte sans hyperlien
+        wb$add_data(sheet = sheet_name, dims = paste0(col_texte, row_id), x = texte_lien)
+        warning(paste("Impossible de créer un hyperlien pour", texte_lien, ":", e$message))
+      })
     } else {
       if (!is.na(texte_lien)) {
         wb$add_data(sheet = sheet_name, dims = paste0(col_texte, row_id), x = texte_lien)

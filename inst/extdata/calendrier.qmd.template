@@ -1,0 +1,15 @@
+---
+title: "Calendrier"
+header-includes:
+  - <script data-goatcounter="https://<%=goatcounter_id%>.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+---
+
+```{r, include=FALSE}
+nombre_suivis <- <%=nrow(liste_suivis)%>
+calendrier <- FichesSRC::creer_calendrier_global("<%=basename(fichier_xlsx)%>", region = <%=region%>)
+```
+
+```{r, echo=FALSE, fig.height=(nombre_suivis)}
+calendrier
+```

@@ -1,129 +1,45 @@
-#' Create All Monitoring Sheets from a Google Sheet
+#' Créer toutes les fiches de suivi web à partir d'un fichier Excel
 #'
-#' This function reads a Google Sheet containing monitoring information and creates
-#' web-based monitoring sheets for all entries marked as publishable ("publiable" = "oui").
-#' It processes each monitoring entry and generates both Excel and web (Quarto) versions
-#' of the monitoring sheets.
+#' Cette fonction lit un fichier Excel contenant des informations de suivi et crée
+#' des fiches de suivi web pour toutes les entrées marquées comme publiables ("publiable" = "oui").
+#' Elle traite chaque entrée de suivi et génère des versions web (Quarto) des fiches de suivi.
 #'
-#' @param metadata URL or ID of the Google Sheet containing monitoring information.
-#'   This sheet should have a "suivis" tab with a column "publiable" to filter publishable entries.
-#' @param dossier_fiches Directory path where the generated monitoring sheets will be saved.
-#'   Both Excel (.xlsx) and Quarto (.qmd) files will be created in this directory.
-#' @param region Optional. The region code to be used in the monitoring sheets.
-#'   This is typically a two-digit code representing a French administrative region.
+#' @param fichier_xlsx Chemin vers le fichier Excel contenant les informations de suivi.
+#'   Ce fichier doit avoir un onglet "suivis" avec une colonne "publiable" pour filtrer les entrées publiables.
+#' @param dossier_fiches Chemin du répertoire où les fiches de suivi générées seront enregistrées.
+#'   Les fichiers Quarto (.qmd) seront créés dans ce répertoire.
+#' @param region Optionnel. Le code région à utiliser dans les fiches de suivi.
+#'   Il s'agit généralement d'un code à deux chiffres représentant une région administrative française.
+#' @param excel_telechargeable Indique si un lien vers le fichier Excel téléchargeable doit être inclus dans les fiches web.
 #'
-#' @return No return value, called for side effects (file creation)
+#' @return Aucune valeur de retour, appelée pour ses effets secondaires (création de fichiers)
 #'
 #' @export
 #'
 #' @importFrom dplyr pull
-#' @importFrom googlesheets4 read_sheet
 #'
 #' @examples
 #' \dontrun{
-#' # Create all monitoring sheets and save them to a directory
-#' creer_toutes_fiches(
-#'   metadata = "https://docs.google.com/spreadsheets/d/your_sheet_id",
+#' # Créer toutes les fiches de suivi et les enregistrer dans un répertoire
+#' creer_fiches_web(
+#'   fichier_xlsx = "chemin/vers/suivis_connaissance.xlsx",
 #'   dossier_fiches = "./output/fiches",
-#'   region = "11"
+#'   region = "11",
+#'   excel_telechargeable = TRUE
 #' )
 #' }
-creer_toutes_fiches <- function(metadata, dossier_fiches, region = NULL) {
-  suivis <- charger_suivis(metadata)
+creer_fiches_web <- function(fichier_xlsx, dossier_fiches, region = NULL, excel_telechargeable) {
+  suivis <- charger_suivis(fichier_xlsx)$suivi
 
-  creer_fiches_excel(suivis = suivis, chemin_fiches = file.path(dossier_fiches, "suivis_connaissance.xlsx"))
+  for (suivi in suivis) {
+    infos <- charger_informations(fichier_xlsx, suivi = suivi, region = region, dossier_travail = dossier_fiches)
+    excel_telechargeable <- excel_telechargeable
 
-  for (x in suivis$suivi) {
-    creer_fiches(
-      infos = charger_informations(metadata, suivi = x, region = region),
-      dossier_fiches = dossier_fiches,
-      region = region
+    brew::brew(
+      system.file("extdata", "page.qmd.brew", package = "FichesSRC"),
+      file.path(dossier_fiches, paste0(infos$suivi, ".qmd"))
     )
+
+    cat(suivi, "  ✓\n")
   }
-}
-
-
-#' Create a Single Monitoring Sheet
-#'
-#' This function creates both web-based (Quarto) and Excel monitoring sheets for a specific
-#' monitoring entry using the provided information. It calls the specialized functions
-#' creer_fiche_web and creer_fiche_excel to generate each format.
-#'
-#' @param infos A list containing formatted monitoring information including title,
-#'   description, objectives, roles, and other metadata. This list is typically
-#'   produced by the charger_informations function.
-#' @param dossier_fiches Directory path where the generated monitoring sheets will be saved.
-#'   Both Excel (.xlsx) and Quarto (.qmd) files will be created in this directory.
-#' @param region Optional. The region code to be used in the monitoring sheets.
-#'   This is typically a two-digit code representing a French administrative region.
-#'
-#' @return No return value, called for side effects (file creation)
-#'
-#' @export
-#'
-#' @importFrom dplyr filter select
-#' @importFrom googlesheets4 read_sheet
-#'
-#' @examples
-#' \dontrun{
-#' # Create monitoring sheets for a specific monitoring entry
-#' infos <- charger_informations(
-#'   metadata = "https://docs.google.com/spreadsheets/d/your_sheet_id",
-#'   suivi_fiche = "monitoring_name",
-#'   region = "11"
-#' )
-#' creer_fiches(
-#'   infos = infos,
-#'   dossier_fiches = "./output/fiches",
-#'   region = "11"
-#' )
-#' }
-creer_fiches <- function(infos, dossier_fiches, region = NULL) {
-  cat(infos$suivi)
-
-  chemin_fiche_web   <- file.path(dossier_fiches, paste0(infos$suivi, ".qmd"))
-  creer_fiche_web(infos, chemin_fiche_web, region)
-  cat("  ✓\n")
-}
-
-#' Create a Web-Based Monitoring Sheet
-#'
-#' This function generates a web-based monitoring sheet (Quarto document) using a template
-#' and the provided monitoring information. It uses the brew package to process a template
-#' file and insert the monitoring information at the appropriate locations.
-#'
-#' @param infos A list containing formatted monitoring information including title,
-#'   description, objectives, roles, and other metadata. This list is typically
-#'   produced by the charger_informations function and should contain elements like
-#'   intitule, description, objectif, etc.
-#' @param chemin_fiche The file path where the generated Quarto (.qmd) document will be saved.
-#'   This file can then be rendered to HTML using Quarto.
-#' @param region Optional. The region code to be used in the monitoring sheet.
-#'   This is typically a two-digit code representing a French administrative region.
-#'
-#' @return No return value, called for side effects (file creation)
-#'
-#' @export
-#'
-#' @importFrom brew brew
-#'
-#' @examples
-#' \dontrun{
-#' # Create a web-based monitoring sheet
-#' infos <- charger_informations(
-#'   metadata = "https://docs.google.com/spreadsheets/d/your_sheet_id",
-#'   suivi_fiche = "monitoring_name",
-#'   region = "11"
-#' )
-#' creer_fiche_web(
-#'   infos = infos,
-#'   chemin_fiche = "./output/fiches/monitoring_name.qmd",
-#'   region = "11"
-#' )
-#' }
-creer_fiche_web <- function(infos, chemin_fiche, region = NULL) {
-  brew::brew(
-    system.file("extdata", "page.qmd.brew", package = "FichesSRC"),
-    chemin_fiche
-  )
 }

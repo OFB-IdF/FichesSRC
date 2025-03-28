@@ -14,10 +14,10 @@
 #' @examples
 #' # Create a global calendar visualization from an Excel file
 #' # creer_calendrier_global("path/to/monitoring_info.xlsx")
-creer_calendrier_global <- function(metadata) {
-  periodes <- charger_suivis(metadata)$suivi |>
+creer_calendrier_global <- function(fichier_xlsx, region) {
+  periodes <- charger_suivis(fichier_xlsx)$suivi |>
     purrr::map(function(suivi) {
-      infos <- charger_informations(metadata, suivi, 11)
+      infos <- charger_informations(fichier_xlsx, suivi, region)
       infos$mois |>
         dplyr::mutate(suivi = suivi, intitule = infos$intitule)
     }) |>

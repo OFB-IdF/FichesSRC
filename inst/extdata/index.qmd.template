@@ -1,0 +1,33 @@
+---
+title: "Missions"
+header-includes:
+  - <script data-goatcounter="https://<%=goatcounter_id%>.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+---
+
+<a href="<%= excel_telechargeable %>" class="btn btn-primary" download>
+  <i class="fas fa-file-arrow-down"></i> Télécharger toutes les fiches
+</a>
+
+<% completer_suivis <- function(groupe) {
+    cat("# ", paste0(groupe, "\n\n"))
+    input <- ""
+    for(suivi_x in liste_suivis$suivi[liste_suivis$groupe == groupe]) {
+      input <- paste0(
+          input,
+          "- [",
+          dplyr::filter(liste_suivis, suivi == suivi_x)$intitule,
+          "](",
+          suivi_x,
+          ".html)\n\n"
+          )
+    }
+    cat(input)
+} %>
+
+
+<%
+for (groupe in unique(liste_suivis$groupe)) {
+  completer_suivis(groupe = groupe)
+}
+%>
