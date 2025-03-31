@@ -1,0 +1,11 @@
+.git
+.github
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+.DS_Store
+*.log
+*.swp
+*.swo
