@@ -6,7 +6,7 @@ generer_site <- function(fichier_infos, source_fichier = c("excel", "google_shee
 
   if (source_fichier == "google_sheet") {
     fichier_xlsx <- file.path(dossier_travail, paste0(fichier_infos, "_gs.xlsx"))
-    
+
     # Vérifier si l'authentification est nécessaire
     if (Sys.getenv("GOOGLE_SERVICE_ACCOUNT_JSON") != "") {
       # Vérifier si la fonction d'authentification existe
@@ -65,7 +65,7 @@ generer_site <- function(fichier_infos, source_fichier = c("excel", "google_shee
 
   creer_fiches_web(
     fichier_xlsx = fichier_xlsx,
-    dossier_fiches = dossier_travail,
+    dossier_travail = dossier_travail,
     region = region,
     excel_telechargeable = excel_telechargeable
   )
