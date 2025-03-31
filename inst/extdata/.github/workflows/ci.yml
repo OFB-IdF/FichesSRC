@@ -2,6 +2,10 @@ name: Mise-a-jour et deploiement du tableau de bord sur GitHub Pages
 on:
   push:
     branches: [ main, master ]
+  schedule:
+    # Exécution hebdomadaire le lundi à 02:00 UTC
+    - cron: '0 2 * * 1'
+  workflow_dispatch: # Permet le déclenchement manuel depuis l'interface GitHub
 jobs:
   deploy:
     runs-on: ubuntu-latest
