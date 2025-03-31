@@ -44,5 +44,9 @@ RUN install2.r --error \
 COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
+# Définition des variables d'environnement pour l'authentification Google Drive
+# Ces variables seront remplacées lors de l'exécution par les secrets GitHub
+ENV GOOGLE_SERVICE_ACCOUNT_JSON=""
+
 # Définition du script d'entrée comme point d'entrée du conteneur
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

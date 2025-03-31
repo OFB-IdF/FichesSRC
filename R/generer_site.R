@@ -6,6 +6,14 @@ generer_site <- function(fichier_infos, source_fichier = c("excel", "google_shee
 
   if (source_fichier == "google_sheet") {
     fichier_xlsx <- file.path(dossier_travail, paste0(fichier_infos, "_gs.xlsx"))
+    
+    # Vérifier si l'authentification est nécessaire
+    if (exists("is_google_drive_auth_configured") && 
+        !is_google_drive_auth_configured() && 
+        Sys.getenv("GOOGLE_SERVICE_ACCOUNT_JSON") != "") {
+      # Authentifier avec le compte de service si disponible
+      auth_google_drive()
+    }
 
     googledrive::drive_download(
       file = fichier_infos,
