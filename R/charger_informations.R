@@ -134,11 +134,18 @@ charger_suivis <- function(fichier_xlsx) {
 #' @keywords internal
 recuperer_fichier <- function(suivi, dossier = getwd(), patron) {
   # Vérifier si l'authentification est nécessaire
-  if (exists("is_google_drive_auth_configured") && 
-      !is_google_drive_auth_configured() && 
-      Sys.getenv("GOOGLE_SERVICE_ACCOUNT_JSON") != "") {
-    # Authentifier avec le compte de service si disponible
-    auth_google_drive()
+  if (Sys.getenv("GOOGLE_SERVICE_ACCOUNT_JSON") != "") {
+    # Vérifier si la fonction d'authentification existe
+    if (exists("is_google_drive_auth_configured")) {
+      # Si l'authentification n'est pas configurée, l'initialiser
+      if (!is_google_drive_auth_configured()) {
+        # Authentifier avec le compte de service
+        auth_google_drive()
+      }
+    } else {
+      # Si la fonction de vérification n'existe pas, tenter l'authentification directement
+      auth_google_drive()
+    }
   }
   
   fichier <- googledrive::drive_find(pattern = paste0(patron, suivi)) |>

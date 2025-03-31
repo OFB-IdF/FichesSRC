@@ -8,11 +8,18 @@ generer_site <- function(fichier_infos, source_fichier = c("excel", "google_shee
     fichier_xlsx <- file.path(dossier_travail, paste0(fichier_infos, "_gs.xlsx"))
     
     # Vérifier si l'authentification est nécessaire
-    if (exists("is_google_drive_auth_configured") && 
-        !is_google_drive_auth_configured() && 
-        Sys.getenv("GOOGLE_SERVICE_ACCOUNT_JSON") != "") {
-      # Authentifier avec le compte de service si disponible
-      auth_google_drive()
+    if (Sys.getenv("GOOGLE_SERVICE_ACCOUNT_JSON") != "") {
+      # Vérifier si la fonction d'authentification existe
+      if (exists("is_google_drive_auth_configured")) {
+        # Si l'authentification n'est pas configurée, l'initialiser
+        if (!is_google_drive_auth_configured()) {
+          # Authentifier avec le compte de service
+          auth_google_drive()
+        }
+      } else {
+        # Si la fonction de vérification n'existe pas, tenter l'authentification directement
+        auth_google_drive()
+      }
     }
 
     googledrive::drive_download(
