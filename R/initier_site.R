@@ -30,6 +30,12 @@ initier_site <- function(dossier_travail, goatcounter_id = NULL) {
       to = file.path(dossier_travail, "_quarto.yml"),
       overwrite = TRUE
     )
+    
+    file.copy(
+      from = system.file("extdata", "robots.txt", package = "FichesSRC"),
+      to = file.path(dossier_travail, "robots.txt"),
+      overwrite = TRUE
+    )
 
     brew::brew(
       file = system.file("extdata", "productions.qmd.template", package = "FichesSRC"),
