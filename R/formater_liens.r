@@ -33,13 +33,12 @@ formater_liens <- function(infos_lien, target) {
     if (target == "web") {
       # Vérifier si le lien est un chemin de fichier local (commence par file:)
       if (grepl("^file:", infos_lien$link)) {
-        # Pour les liens de fichiers locaux, créer un lien qui copie l'adresse dans le presse-papier
+        # Pour les liens de fichiers locaux, utiliser l'attribut href standard
+        # pour que le script link-handler.js puisse les détecter et ajouter les boutons
         paste0(
-          "<a href='javascript:void(0)' ",
-          "onclick=\"navigator.clipboard.writeText('", infos_lien$link, "').then(() => { alert('Adresse copiée dans le presse-papier!'); })\" ",
-          "style='cursor:pointer;'>", 
+          "<a href='", infos_lien$link, "'>", 
           infos_lien$text, 
-          " <span style='font-size:0.8em;color:#666;'>(cliquer pour copier l'adresse)</span></a>"
+          "</a>"
         )
       } else {
         # Pour les liens web normaux, comportement standard
