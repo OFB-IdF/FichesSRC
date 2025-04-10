@@ -25,11 +25,17 @@ initier_site <- function(dossier_travail, goatcounter_id = NULL) {
 
     copier_www(dossier_travail)
 
+    # Copier le fichier _quarto.yml
     file.copy(
       from = system.file("extdata", "_quarto.yml", package = "FichesSRC"),
       to = file.path(dossier_travail, "_quarto.yml"),
       overwrite = TRUE
     )
+    
+    # Ajouter le script GoatCounter au _quarto.yml si un ID est fourni
+    if (!is.null(goatcounter_id)) {
+      ajouter_goatcounter_tracking_quarto(dossier_travail, goatcounter_id)
+    }
     
     file.copy(
       from = system.file("extdata", "robots.txt", package = "FichesSRC"),

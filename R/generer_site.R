@@ -69,12 +69,11 @@ generer_site <- function(fichier_infos, source_fichier = c("excel", "google_shee
     region = region,
     excel_telechargeable = excel_telechargeable
   )
-
-  ajouter_goatcounter_tracking(
-    dossier_travail = dossier_travail,
-    suivis = liste_suivis$suivi,
-    goatcounter_id = goatcounter_id
-  )
+  
+  # Mettre à jour le fichier _quarto.yml avec le script GoatCounter si un ID est fourni
+  if (!is.null(goatcounter_id)) {
+    ajouter_goatcounter_tracking_quarto(dossier_travail, goatcounter_id)
+  }
 
   brew::brew(
     file = system.file("extdata", "index.qmd.template", package = "FichesSRC"),
