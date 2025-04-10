@@ -73,7 +73,11 @@ charger_informations <- function(fichier_xlsx, suivi_fiche, region, telecharger_
     role_regional = infos$M[11],
     role_departemental = infos$N[11],
     duree = infos$M[6],
-    nombre_agents = infos$N[6],
+    nombre_agents = ifelse(
+      as.numeric(infos$N[6]), 
+      format(infos$N[6], nsmall = 0), 
+      infos$N[6]
+      ),
     expertise = infos[7, c("P", "Q", "R", "S", "T")][!is.na(infos[6, c("P", "Q", "R", "S", "T")])],
     droits_formation = infos$P[9],
     protocole = infos$L[16],
