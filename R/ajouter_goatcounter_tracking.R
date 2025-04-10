@@ -54,7 +54,7 @@ ajouter_goatcounter_tracking <- function(dossier_travail, suivis, goatcounter_id
                 }
                 
                 # Créer un nouvel élément avec la même indentation
-                new_item <- glue::glue("{item_indent}- text: |\n{content_indent_extra}<script data-goatcounter=\"https://{goatcounter_id}.goatcounter.com/count\"\n{content_indent_extra}async src=\"//gc.zgo.at/count.js\"></script>")
+                new_item <- glue::glue("{item_indent}- text: |\n{content_indent_extra}<script data-goatcounter=\"https://{goatcounter_id}.goatcounter.com/count\"\n{content_indent_extra}        async src=\"//gc.zgo.at/count.js\"></script>")
                 
                 # Insérer le nouvel élément après la ligne existante
                 fiche_txt <- c(
@@ -68,7 +68,7 @@ ajouter_goatcounter_tracking <- function(dossier_travail, suivis, goatcounter_id
                 indent_level2 <- paste0(indent_level1, "  ")
                 
                 # Remplacer la ligne include-in-header: par la nouvelle version
-                replacement <- glue::glue('{indentation}include-in-header:\n{indent_level1}- text: |\n{indent_level2}<script data-goatcounter="https://{goatcounter_id}.goatcounter.com/count"\n{indent_level2}async src="//gc.zgo.at/count.js"></script>')
+                replacement <- glue::glue('{indentation}include-in-header:\n{indent_level1}- text: |\n{indent_level2}<script data-goatcounter="https://{goatcounter_id}.goatcounter.com/count"\n{indent_level2}        async src="//gc.zgo.at/count.js"></script>')
                 
                 fiche_txt[header_idx] <- replacement
               }
@@ -86,7 +86,7 @@ ajouter_goatcounter_tracking <- function(dossier_travail, suivis, goatcounter_id
                 if (is.na(indentation)) indentation <- ""
                 
                 # Créer le header avec la même indentation que le titre
-                header_text <- glue::glue('{indentation}include-in-header:\n{indentation}  - text: |\n{indentation}    <script data-goatcounter="https://{goatcounter_id}.goatcounter.com/count"\n{indentation}    async src="//gc.zgo.at/count.js"></script>')
+                header_text <- glue::glue('{indentation}include-in-header:\n{indentation}  - text: |\n{indentation}    <script data-goatcounter="https://{goatcounter_id}.goatcounter.com/count"\n{indentation}        async src="//gc.zgo.at/count.js"></script>')
                 
                 # Insérer après le titre
                 fiche_txt <- c(
@@ -102,7 +102,7 @@ ajouter_goatcounter_tracking <- function(dossier_travail, suivis, goatcounter_id
                 yaml_start <- which(stringr::str_detect(fiche_txt, '^---'))[1]
                 
                 if (!is.na(yaml_start) && yaml_start < length(fiche_txt)) {
-                  header_text <- "include-in-header:\n  - text: |\n    <script data-goatcounter=\"https://" + goatcounter_id + ".goatcounter.com/count\"\n    async src=\"//gc.zgo.at/count.js\"></script>"
+                  header_text <- "include-in-header:\n  - text: |\n    <script data-goatcounter=\"https://" + goatcounter_id + ".goatcounter.com/count\"\n        async src=\"//gc.zgo.at/count.js\"></script>"
                   
                   # Insérer après la première ligne de YAML
                   fiche_txt <- c(

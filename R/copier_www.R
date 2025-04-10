@@ -25,11 +25,7 @@ copier_www <- function(dossier) {
     dir.create(file.path(dossier, "www"))
 
   purrr::walk(
-    c(
-      list.files(system.file("www", package = "FichesSRC"), pattern = ".png", full.names = TRUE),
-      system.file("www", c("experts.html", "Repertoire_ressources_internet_2020.pdf", "styles.css"),
-                  package = "FichesSRC")
-    ),
+    list.files(system.file("www", package = "FichesSRC"), full.names = TRUE),
     function(x) {
       file.copy(
         from = x,

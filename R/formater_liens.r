@@ -31,7 +31,20 @@ formater_liens <- function(infos_lien, target) {
       return(infos_lien$text)
 
     if (target == "web") {
-      paste0("<a href='", infos_lien$link, "' target='_blank'>", infos_lien$text, "</a>")
+      # Vérifier si le lien est un chemin de fichier local (commence par file:)
+      if (grepl("^file:", infos_lien$link)) {
+        # Pour les liens de fichiers locaux, créer un lien qui copie l'adresse dans le presse-papier
+        paste0(
+          "<a href='javascript:void(0)' ",
+          "onclick=\"navigator.clipboard.writeText('", infos_lien$link, "').then(() => { alert('Adresse copiée dans le presse-papier!'); })\" ",
+          "style='cursor:pointer;'>", 
+          infos_lien$text, 
+          " <span style='font-size:0.8em;color:#666;'>(cliquer pour copier l'adresse)</span></a>"
+        )
+      } else {
+        # Pour les liens web normaux, comportement standard
+        paste0("<a href='", infos_lien$link, "' target='_blank'>", infos_lien$text, "</a>")
+      }
     } else {
       if (target == "excel") {
         # Nettoyer l'URL pour éviter les erreurs de formule Excel

@@ -75,7 +75,7 @@ Pour utiliser RStudio Server avec le package FichesSRC préinstallé :
 docker run -d -p 8787:8787 -e PASSWORD=motdepasse --name fiches-src-rstudio fiches-src rstudio
 
 # Ou avec l'image depuis Docker Hub
-docker run -d -p 8787:8787 -e PASSWORD=motdepasse --name fiches-src-rstudio <nom_utilisateur>/fiches-src:latest rstudio
+docker run -d -p 8787:8787 -e PASSWORD=motdepasse --name fiches-src-rstudio ofbidf/fiches-src:latest rstudio
 ```
 
 Accédez ensuite à RStudio via votre navigateur à l'adresse http://localhost:8787 avec :
