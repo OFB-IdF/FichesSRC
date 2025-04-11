@@ -66,8 +66,9 @@ function initLinkHandlers() {
             // Remplacer le comportement par défaut pour les liens locaux
             setupLocalLinkHandler(link, href);
         } else if (href && !href.startsWith('javascript:')) {
-            // Pour les liens externes, ajouter target="_blank" s'il n'existe pas déjà
-            if (!link.getAttribute('target')) {
+            // Pour les liens externes, ajouter target="_blank" uniquement pour les liens qui sortent du domaine
+            // Ne pas ouvrir dans un nouvel onglet les liens internes (.html) et les liens de téléchargement
+            if (!link.getAttribute('target') && isExternalLink(href) && !href.endsWith('.html') && !link.hasAttribute('download')) {
                 link.setAttribute('target', '_blank');
             }
         }
@@ -87,7 +88,7 @@ function setupLocalLinkHandler(link, href) {
     link.style.textDecoration = 'underline';
     link.style.color = '#0066cc';
     
-    // Créer un conteneur pour le lien et les boutons
+    // Créer un conteneur pour le lien et le bouton
     const linkContainer = document.createElement('span');
     linkContainer.className = 'link-container';
     linkContainer.style.display = 'inline-flex';
@@ -102,7 +103,7 @@ function setupLocalLinkHandler(link, href) {
     const copyButton = document.createElement('button');
     copyButton.className = 'link-action-button copy-button';
     copyButton.innerHTML = '<i class="fas fa-copy"></i>';
-    copyButton.title = 'Copier l\'adresse';
+    copyButton.title = 'Copier l\'adresse (le lien doit être ouvert manuellement pour des raisons de sécurité)';
     copyButton.style.marginLeft = '5px';
     copyButton.style.padding = '2px 5px';
     copyButton.style.fontSize = '0.8em';
@@ -111,22 +112,8 @@ function setupLocalLinkHandler(link, href) {
     copyButton.style.borderRadius = '3px';
     copyButton.style.cursor = 'pointer';
     
-    // Créer le bouton d'ouverture dans l'explorateur
-    const openButton = document.createElement('button');
-    openButton.className = 'link-action-button open-button';
-    openButton.innerHTML = '<i class="fas fa-folder-open"></i>';
-    openButton.title = 'Ouvrir dans l\'explorateur';
-    openButton.style.marginLeft = '5px';
-    openButton.style.padding = '2px 5px';
-    openButton.style.fontSize = '0.8em';
-    openButton.style.backgroundColor = '#f0f0f0';
-    openButton.style.border = '1px solid #ccc';
-    openButton.style.borderRadius = '3px';
-    openButton.style.cursor = 'pointer';
-    
-    // Ajouter les boutons au conteneur
+    // Ajouter le bouton au conteneur
     linkContainer.appendChild(copyButton);
-    linkContainer.appendChild(openButton);
     
     // Ajouter les gestionnaires d'événements
     link.addEventListener('click', function(e) {
@@ -137,12 +124,6 @@ function setupLocalLinkHandler(link, href) {
         e.preventDefault();
         e.stopPropagation();
         copyToClipboard(href);
-    });
-    
-    openButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        openInExplorer(href);
     });
 }
 
@@ -210,24 +191,45 @@ function fallbackCopyToClipboard(text) {
  */
 function openInExplorer(filePath) {
     try {
-        // Ouvrir directement dans un nouvel onglet
-        const win = window.open(filePath, '_blank');
+        // Copier d'abord l'URL dans le presse-papier
+        copyToClipboard(filePath);
+        
+        // Ouvrir un nouvel onglet vierge
+        const win = window.open('about:blank', '_blank');
         if (win) {
             win.focus();
-            showNotification('Lien ouvert dans un nouvel onglet');
+            showNotification('Nouvel onglet ouvert. Vous pouvez y coller l\'URL (Ctrl+V)');
         } else {
-            // Si le popup est bloqué, on utilise la méthode alternative
-            const tempLink = document.createElement('a');
-            tempLink.href = filePath;
-            tempLink.target = '_blank';
-            document.body.appendChild(tempLink);
-            tempLink.click();
-            document.body.removeChild(tempLink);
-            showNotification('Lien ouvert dans un nouvel onglet');
+            showNotification('Le navigateur a bloqué l\'ouverture du nouvel onglet. Veuillez l\'autoriser.', true);
         }
     } catch (err) {
         console.error('Erreur lors de l\'ouverture: ', err);
-        showNotification('Impossible d\'ouvrir le lien. Veuillez essayer de le copier et l\'ouvrir manuellement.', true);
+        showNotification('Impossible d\'ouvrir le nouvel onglet. Veuillez essayer manuellement.', true);
+    }
+}
+
+/**
+ * Affiche une notification temporaire
+ * @param {string} message - Le message à afficher
+ * @param {boolean} isError - Indique si c'est une erreur
+ */
+/**
+ * Vérifie si un lien est externe (pointe vers un autre domaine)
+ * @param {string} href - L'URL du lien
+ * @returns {boolean} - True si le lien est externe, false sinon
+ */
+function isExternalLink(href) {
+    try {
+        // Si le lien commence par http ou https, on vérifie s'il pointe vers un autre domaine
+        if (href.startsWith('http://') || href.startsWith('https://')) {
+            const currentDomain = window.location.hostname;
+            const linkDomain = new URL(href).hostname;
+            return currentDomain !== linkDomain;
+        }
+        return false; // Les liens relatifs ou autres protocoles ne sont pas considérés comme externes
+    } catch (e) {
+        console.error('Erreur lors de la vérification du lien: ', e);
+        return false;
     }
 }
 
